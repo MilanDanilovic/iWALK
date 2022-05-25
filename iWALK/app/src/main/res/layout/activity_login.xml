@@ -100,8 +100,8 @@
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
             android:hint="Password"
+            android:inputType="textPassword"
             android:textColor="#FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>
 
