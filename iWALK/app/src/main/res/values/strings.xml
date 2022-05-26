@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">iWALK</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_friends">Friends</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_favourite_walkers">Favourite Walkers</string>
+    <string name="menu_active_walkers">Active Walkers</string>
+    <string name="menu_my_pets">My Pets</string>
+    <string name="menu_posts">Posts</string>
+    <string name="menu_logout">Log Out</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
