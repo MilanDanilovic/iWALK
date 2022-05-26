@@ -6,5 +6,10 @@
     android:background="#001419"
     tools:context=".HomeFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="OVDE CE DA IDU SETACI RANGIRANI"
+        android:textColor="#FFFFFF"/>
 
 </FrameLayout>
