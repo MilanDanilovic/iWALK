@@ -30,6 +30,8 @@
             android:name=".HomeActivity"/>
         <activity
             android:name=".AddPostActivity"/>
+        <activity
+            android:name=".EditProfileActivity"/>
     </application>
 
 

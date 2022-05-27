@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#001419"
-    tools:context=".ProfileFragment">
+    tools:context=".EditProfileActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_profile_picture"
@@ -45,80 +45,33 @@
         app:layout_constraintTop_toBottomOf="@+id/user_profile_picture" />
 
     <ImageView
-        android:id="@+id/user_profile_edit"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/edit_user_save"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.23"
+        app:layout_constraintEnd_toStartOf="@+id/edit_user_cancel"
+        app:layout_constraintHorizontal_bias="0.226"
         app:layout_constraintStart_toEndOf="@+id/user_profile_surname"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
-        app:srcCompat="@drawable/ic_user_edit" />
+        app:srcCompat="@drawable/ic_save_changes" />
 
-    <TextView
-        android:id="@+id/user_profile_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginRight="10dp"
-        android:text=" Score:"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toStartOf="@+id/user_profile_score_value"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
-
-    <TextView
-        android:id="@+id/user_profile_score_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="244dp"
-        android:text="1500"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+    <ImageView
+        android:id="@+id/edit_user_cancel"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="-20dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/user_profile_score"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
-
-    <TextView
-        android:id="@+id/user_profile_numwalks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="10dp"
-        android:text=" Number of Walks:"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toStartOf="@+id/user_profile_numwalks_value"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_score" />
-
-    <TextView
-        android:id="@+id/user_profile_numwalks_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="152dp"
-        android:text="150"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/user_profile_numwalks"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_score" />
+        app:layout_constraintStart_toEndOf="@+id/edit_user_save"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
+        app:srcCompat="@drawable/ic_cancel_changes" />
 
     <TextView
         android:id="@+id/user_profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:layout_marginRight="10dp"
         android:text=" Username:"
         android:textColor="#FFFFFF"
@@ -126,28 +79,34 @@
         app:layout_constraintEnd_toStartOf="@+id/user_profile_username_value"
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_numwalks" />
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
 
-    <TextView
+    <EditText
         android:id="@+id/user_profile_username_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginStart="20dp"
-        android:text="username"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#FFFFFF"
+        android:ems="10"
+        android:hint="username"
+        android:maxLines="20"
+        android:minLines="2"
+        android:scrollbars="vertical"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColorHint="#FFFFFF"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/user_profile_username"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_numwalks" />
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
 
     <TextView
         android:id="@+id/user_profile_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:layout_marginRight="10dp"
         android:text=" Phone:"
         android:textColor="#FFFFFF"
@@ -157,16 +116,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_username" />
 
-    <TextView
+    <EditText
         android:id="@+id/user_profile_phone_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginStart="20dp"
-        android:text="+381 123 456"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#FFFFFF"
+        android:ems="10"
+        android:hint="+381 123 456"
+        android:maxLines="20"
+        android:minLines="2"
+        android:scrollbars="vertical"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColorHint="#FFFFFF"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/user_profile_phone"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_username" />
@@ -176,9 +141,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="28dp"
         android:layout_marginRight="10dp"
-        android:text="Email:"
+        android:text=" Email:"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/user_profile_email_value"
@@ -186,32 +151,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_phone" />
 
-    <TextView
+    <EditText
         android:id="@+id/user_profile_email_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="116dp"
-        android:layout_marginStart="20dp"
-        android:text="email@gmail.com"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#FFFFFF"
+        android:ems="10"
+        android:hint="+381 123 456"
+        android:maxLines="20"
+        android:minLines="2"
+        android:scrollbars="vertical"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColorHint="#FFFFFF"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/user_profile_email"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_phone" />
-
-    <Button
-        android:id="@+id/button_see_my_pets"
-        android:layout_width="247dp"
-        android:layout_height="71dp"
-        android:background="@drawable/btn_bg"
-        android:text="My pets"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_email_value"
-        app:layout_constraintVertical_bias="0.279" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
