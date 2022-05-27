@@ -10,7 +10,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textNameInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="100dp"
@@ -19,10 +19,10 @@
         app:boxStrokeWidth="3dp"
         app:endIconMode="clear_text"
         app:endIconTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/iwalkDog"
         app:layout_constraintBottom_toTopOf="@+id/textSurnameInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iwalkDog">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameInput"
@@ -36,7 +36,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textSurnameInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
@@ -62,11 +62,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textUsernameInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="100dp"
         app:endIconTint="@color/white"
         app:boxStrokeWidth="3dp"
         app:boxStrokeColor="@color/white"
@@ -88,7 +88,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textEmailInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
@@ -114,7 +114,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textPasswordInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
@@ -140,7 +140,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textConfirmPasswordInputLayout"
         android:layout_width="311dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
@@ -155,7 +155,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textPasswordInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/confirmSasswordInput"
+            android:id="@+id/confirmPasswordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Confirm Password"
@@ -165,14 +165,18 @@
 
     <ImageView
         android:id="@+id/iwalkDog"
-        android:layout_width="337dp"
-        android:layout_height="150dp"
+        android:layout_width="330dp"
+        android:layout_height="115dp"
         android:layout_marginStart="37dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="37dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/textSurnameInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_iwalk" />
 
     <Button
@@ -186,7 +190,6 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/alreadyHaveAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.408"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textConfirmPasswordInputLayout"
         app:layout_constraintVertical_bias="0.262" />
@@ -196,7 +199,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="80dp"
+        android:layout_marginBottom="32dp"
         android:maxLines="2"
         android:text="Already have an account?   Sign in"
         android:textAlignment="center"
