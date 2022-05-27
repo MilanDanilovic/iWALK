@@ -12,6 +12,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -76,7 +78,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_my_pets -> Toast.makeText(baseContext, "Morate se registrovati kako biste imali pristup! ", Toast.LENGTH_SHORT).show()
             R.id.nav_posts -> Toast.makeText(baseContext, "Morate se registrovati kako biste imali pristup! ", Toast.LENGTH_SHORT).show()
             R.id.nav_logout -> {
-                val i: Intent = Intent(this, LoginActivity::class.java)
+                Firebase.auth.signOut()
+                val i: Intent = Intent(this, MainActivity::class.java)
                 startActivity(i)
             }
         }
