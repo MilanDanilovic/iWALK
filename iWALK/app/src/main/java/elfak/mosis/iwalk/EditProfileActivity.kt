@@ -24,8 +24,8 @@ class EditProfileActivity : AppCompatActivity() {
             alertDialog.setMessage("Are you sure you want to cancel changes?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                supportFragmentManager.beginTransaction()
-                    .add(android.R.id.content, ProfileFragment()).commit()
+                val i: Intent = Intent(this, HomeActivity::class.java)
+                startActivity(i)
             })
             alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
             alertDialog.show()
@@ -36,8 +36,8 @@ class EditProfileActivity : AppCompatActivity() {
             alertDialog.setMessage("Are you sure you want to save changes?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                supportFragmentManager.beginTransaction()
-                    .add(android.R.id.content, ProfileFragment()).commit()
+                val i: Intent = Intent(this, HomeActivity::class.java)
+                startActivity(i)
             })
             alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
             alertDialog.show()
