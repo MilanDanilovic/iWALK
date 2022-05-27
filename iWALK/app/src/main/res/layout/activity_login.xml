@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/ic_littledog" />
 
     <TextView
-        android:id="@+id/tv_home"
+        android:id="@+id/forgottenPass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -70,10 +70,10 @@
         app:layout_constraintTop_toBottomOf="@+id/littleDog">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/usernameInput"
+            android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:hint="Email"
             android:textColor="#FFFFFF"
             android:backgroundTint="#FFFFFF"
             android:outlineSpotShadowColor="@color/white"/>
