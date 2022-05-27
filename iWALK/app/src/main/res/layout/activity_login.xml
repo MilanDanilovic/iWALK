@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:textColor="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:outlineSpotShadowColor="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,6 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:backgroundTint="#FFFFFF"
             android:inputType="textPassword"
             android:textColor="#FFFFFF" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -11,6 +11,13 @@
     <string name="menu_my_pets">My Pets</string>
     <string name="menu_posts">Posts</string>
     <string name="menu_logout">Log Out</string>
+    <string name="add_post_description">Description:</string>
+    <string name="add_post_description_hint">Start your description...</string>
+    <string name="add_post_date">Date:</string>
+    <string name="add_post_time">Time:</string>
+    <string name="add_post_time_hint">Input time...</string>
+    <string name="add_post_add">Add</string>
+    <string name="add_post_cancel">Input time...</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

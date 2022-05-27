@@ -30,6 +30,9 @@
             android:name=".RegisterActivity"/>
         <activity
             android:name=".HomeActivity"/>
+        <activity
+            android:name=".AddPostActivity"/>
     </application>
+
 
 </manifest>
