@@ -3,22 +3,21 @@ package elfak.mosis.iwalk
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 
-class EditProfileActivity : AppCompatActivity() {
+class EditPetActivity : AppCompatActivity() {
 
-    private lateinit var cancel : ImageView
-    private lateinit var save : ImageView
+    private lateinit var cancel : Button
+    private lateinit var edit : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_editprofile)
+        setContentView(R.layout.activity_editpet)
 
-        cancel = findViewById(R.id.edit_user_cancel)
-        save = findViewById(R.id.edit_user_save)
+        cancel = findViewById(R.id.button_edit_pet)
+        edit = findViewById(R.id.button_cancel_edit_pet)
 
         cancel.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this, R.style.Theme_PopUpDialog)
@@ -32,7 +31,7 @@ class EditProfileActivity : AppCompatActivity() {
             alertDialog.show()
         }
 
-        save.setOnClickListener {
+        edit.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this, R.style.Theme_PopUpDialog)
             alertDialog.setMessage("Are you sure you want to save changes?")
 
