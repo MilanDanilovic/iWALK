@@ -34,6 +34,10 @@
             android:name=".AddPostActivity"/>
         <activity
             android:name=".EditProfileActivity"/>
+        <activity
+            android:name=".AddPetActivity"/>
+        <activity
+            android:name=".EditPetActivity"/>
     </application>
 
 
