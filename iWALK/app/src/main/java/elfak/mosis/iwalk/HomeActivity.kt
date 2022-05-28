@@ -52,8 +52,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         addPost.setOnClickListener {
-            val i: Intent = Intent(this, AddPostActivity::class.java)
-            startActivity(i)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AddPostFragment()).commit()
         }
 
     }
