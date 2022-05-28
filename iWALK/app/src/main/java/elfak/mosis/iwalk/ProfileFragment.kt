@@ -1,12 +1,13 @@
 package elfak.mosis.iwalk
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 
 class ProfileFragment : Fragment() {
 
@@ -19,8 +20,12 @@ class ProfileFragment : Fragment() {
 
         val edit: ImageView = requireView().findViewById<ImageView>(R.id.user_profile_edit)
         edit.setOnClickListener(View.OnClickListener {
-            val intent = Intent(activity, EditProfileActivity::class.java)
-            startActivity(intent)
+            val fragment: Fragment = EditProfileFragment()
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.profile_fragment, fragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         })
     }
 
