@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
                 passwordResetDialog.setPositiveButton(
                     "Accept"
                 ) { _, _ ->
-                    val mail: String = email.text.toString()
+                    val mail: String = resetMail.text.toString()
                     auth.sendPasswordResetEmail(mail)
                         .addOnSuccessListener(OnSuccessListener<Void?> {
                             Toast.makeText(
