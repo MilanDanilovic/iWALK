@@ -33,7 +33,7 @@
             android:layout_marginTop="32dp"
             android:text="username"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/walker_profile_picture"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -33,7 +33,7 @@
                     android:text="users pets"
                     android:layout_marginTop="20dp"
                     android:gravity="center_horizontal"
-                    android:textSize="30sp"
+                    android:textSize="24sp"
                     android:textColor="#FFFFFF"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

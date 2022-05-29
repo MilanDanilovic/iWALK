@@ -42,7 +42,7 @@
                 android:layout_gravity="start"
                 android:text="Name:"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_marginStart="5dp"
                 android:text="name"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -74,7 +74,7 @@
                 android:layout_gravity="start"
                 android:text="Breed:"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:layout_marginStart="5dp"
                 android:text="dog"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -106,7 +106,7 @@
                 android:layout_gravity="start"
                 android:text="Weight:"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -116,7 +116,7 @@
                 android:layout_marginStart="5dp"
                 android:text="10kg"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -138,7 +138,7 @@
                 android:layout_marginStart="2dp"
                 android:text="Description:"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -148,7 +148,7 @@
                 android:layout_marginStart="5dp"
                 android:text="..."
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
