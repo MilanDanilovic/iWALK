@@ -4,16 +4,12 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
@@ -49,8 +45,8 @@ class RegisterActivity : AppCompatActivity() {
         name = findViewById(R.id.nameInput)
         surname = findViewById(R.id.surnameInput)
 
-        alreadyHaveAccount = findViewById(R.id.alreadyHaveAccount);
-        register = findViewById(R.id.buttonRegisterAct);
+        alreadyHaveAccount = findViewById(R.id.alreadyHaveAccount)
+        register = findViewById(R.id.buttonRegisterAct)
 
         alreadyHaveAccount.setOnClickListener {
             val i: Intent = Intent(this, LoginActivity::class.java)
@@ -59,9 +55,9 @@ class RegisterActivity : AppCompatActivity() {
 
        register.setOnClickListener {
 
-           if (password.text.toString().equals(confirmPassword.text.toString()) && password.text.toString() != "") {
+           if (password.text.toString() == confirmPassword.text.toString() && password.text.toString() != "") {
 
-               val userName: String = username.getText().toString()
+               val userName: String = username.text.toString()
                val usersRef: CollectionReference = db.collection("users")
                val query = usersRef.whereEqualTo("username", userName)
 
@@ -85,7 +81,6 @@ class RegisterActivity : AppCompatActivity() {
                                            surname.text.toString()
                                        val usernameVal: String =
                                            username.text.toString()
-                                       val passwordVal = password.text.toString()
                                        val emailVal = email.text.toString()
                                        val dataToSave: MutableMap<String, Any> =
                                            HashMap()
