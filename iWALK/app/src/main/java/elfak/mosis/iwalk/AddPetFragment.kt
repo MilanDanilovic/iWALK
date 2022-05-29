@@ -29,10 +29,10 @@ class AddPetFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to cancel adding new pet?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                val fragment: Fragment = ProfileFragment()
+                val fragment: Fragment = MyPetsFragment()
                 val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.edit_profile_fragment, fragment)
+                fragmentTransaction.replace(R.id.add_pet_fragment, fragment)
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commit()
             })
@@ -45,10 +45,10 @@ class AddPetFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to save new pet?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                val fragment: Fragment = ProfileFragment()
+                val fragment: Fragment = MyPetsFragment()
                 val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.edit_profile_fragment, fragment)
+                fragmentTransaction.replace(R.id.add_pet_fragment, fragment)
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commit()
             })

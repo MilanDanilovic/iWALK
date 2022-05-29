@@ -69,25 +69,25 @@
 
             <TextView
                 android:id="@+id/user_profile_email"
-                android:layout_width="120dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:text=" Email:"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/user_profile_email_value"
-                android:layout_width="235dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="0dp"
-                android:text="email@gmail.com"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:text="email"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,25 +102,25 @@
 
             <TextView
                 android:id="@+id/user_profile_username"
-                android:layout_width="120dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="10dp"
                 android:text=" Username:"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/user_profile_username_value"
-                android:layout_width="235dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="0dp"
                 android:text="username"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,25 +135,25 @@
 
             <TextView
                 android:id="@+id/user_profile_score"
-                android:layout_width="120dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:text=" Score:"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/user_profile_score_value"
-                android:layout_width="235dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="0dp"
                 android:text="1500"
+                android:layout_marginEnd="0dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -168,25 +168,25 @@
 
             <TextView
                 android:id="@+id/user_profile_numwalks"
-                android:layout_width="120dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:text=" Walks:"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/user_profile_numwalks_value"
-                android:layout_width="235dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="0dp"
-                android:text="150"
+                android:text="100"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/linearLayoutPhone"
@@ -197,25 +197,25 @@
 
             <TextView
                 android:id="@+id/user_profile_phone"
-                android:layout_width="120dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:text=" Phone:"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/user_profile_phone_value"
-                    android:layout_width="235dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="0dp"
-                    android:text="+381 123 456"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:text="+381 234 567"
+                    android:textSize="16sp" />
         </LinearLayout>
 
 

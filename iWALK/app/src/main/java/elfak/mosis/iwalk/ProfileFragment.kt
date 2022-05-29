@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -50,7 +51,15 @@ class ProfileFragment : Fragment() {
             fragmentTransaction.commit()
         })
 
-
+		val seePets: Button = requireView().findViewById<Button>(R.id.button_see_my_pets)
+        seePets.setOnClickListener(View.OnClickListener {
+            val fragment: Fragment = MyPetsFragment()
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.profile_fragment, fragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        })
         score = requireView().findViewById<TextView>(R.id.user_profile_score_value)
         numberOfWalks = requireView().findViewById<TextView>(R.id.user_profile_numwalks_value)
         username = requireView().findViewById<TextView>(R.id.user_profile_username_value)
