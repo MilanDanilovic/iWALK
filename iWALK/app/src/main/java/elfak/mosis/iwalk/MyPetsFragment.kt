@@ -1,16 +1,15 @@
 package elfak.mosis.iwalk
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
-class ProfileFragment : Fragment() {
+class MyPetsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,22 +18,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val edit: ImageView = requireView().findViewById<ImageView>(R.id.user_profile_edit)
-        edit.setOnClickListener(View.OnClickListener {
-            val fragment: Fragment = EditProfileFragment()
+        val addNewPet: Button = requireView().findViewById<Button>(R.id.my_pets_add_new_pet)
+        addNewPet.setOnClickListener(View.OnClickListener {
+            val fragment: Fragment = AddPetFragment()
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.profile_fragment, fragment)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
-        })
-
-        val seePets: Button = requireView().findViewById<Button>(R.id.button_see_my_pets)
-        seePets.setOnClickListener(View.OnClickListener {
-            val fragment: Fragment = MyPetsFragment()
-            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.profile_fragment, fragment)
+            fragmentTransaction.replace(R.id.my_pets_fragment, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         })
@@ -45,11 +34,10 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.fragment_my_pets, container, false)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
     }
-
 }

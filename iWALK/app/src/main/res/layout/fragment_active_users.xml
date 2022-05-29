@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#001419"
-    android:id="@+id/home_fragment"
-    tools:context=".HomeFragment">
+    android:id="@+id/active_users_fragment"
+    tools:context=".ActiveUsersFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Top Walkers"
+                android:text="Currently Active Walkers"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp"
                 android:gravity="center_horizontal"
@@ -30,7 +30,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/top_walkers_recycler"
+                android:id="@+id/active_walkers_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
