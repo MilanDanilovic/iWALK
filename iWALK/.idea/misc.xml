@@ -13,6 +13,8 @@
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.184" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/btn_bg.xml" value="0.184" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/ic_launcher_background.xml" value="0.184" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/text_view_border.xml" value="0.1795" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/textlines.xml" value="0.1795" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/acitivity_home.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_addpet.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_addpost.xml" value="0.253125" />
@@ -25,20 +27,26 @@
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_popupaddpostsave.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_profile.xml" value="0.17447916666666666" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_register.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_all_friends.xml" value="0.253125" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_find_friends.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_pets.xml" value="0.253125" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_requests_friends.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_walkers.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_walkers_favourite.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_active_users.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_pet.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_post.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_all_friends.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_pet.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_favourite_walkers.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_find_friends.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_my_pets.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_persons_pets.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_pet_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_requests_friends.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/nav_header.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/menu/drawer_menu.xml" value="0.253125" />
       </map>

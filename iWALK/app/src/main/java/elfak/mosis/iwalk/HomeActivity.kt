@@ -70,7 +70,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.getItemId()) {
             R.id.nav_home -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HomeFragment()).commit()
-            R.id.nav_friends -> Toast.makeText(baseContext, "Morate se registrovati kako biste imali pristup! ", Toast.LENGTH_SHORT).show()
+            R.id.nav_friends -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AllFriendsFragment()).commit()
             R.id.nav_profile -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ProfileFragment()).commit()
             R.id.nav_favourite_walkers -> supportFragmentManager.beginTransaction()

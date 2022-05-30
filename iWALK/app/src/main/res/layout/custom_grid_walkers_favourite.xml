@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#001419"
+    android:id="@+id/custom_grid_walkers_favourite"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/card_view_walkers"
+        android:id="@+id/constraint_layout_walkers_favourite"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="4dp"
@@ -16,7 +17,7 @@
         app:cardUseCompatPadding="true">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/walker_profile_picture"
+            android:id="@+id/favourite_walker_profile_picture"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="10dp"
@@ -26,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/walker_username_value"
+            android:id="@+id/favourite_walker_username_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -34,7 +35,7 @@
             android:text="username"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/walker_profile_picture"
+            app:layout_constraintStart_toEndOf="@+id/favourite_walker_profile_picture"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -43,7 +44,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="96dp"
             android:layout_marginTop="32dp"
-            app:layout_constraintStart_toEndOf="@+id/walker_username_value"
+            app:layout_constraintStart_toEndOf="@+id/favourite_walker_username_value"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_send_message" />
 
