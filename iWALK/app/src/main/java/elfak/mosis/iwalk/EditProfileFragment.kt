@@ -81,7 +81,11 @@ class EditProfileFragment : Fragment() {
                     .document(FirebaseAuth.getInstance().currentUser!!.uid)
 
                 if (TextUtils.isEmpty(userName)) {
-                    newUsername.error = "Username field can not be empty!"
+                    Toast.makeText(
+                        this@EditProfileFragment.context,
+                        "Username field can not be empty!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else{
                     query.get().addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -97,10 +101,18 @@ class EditProfileFragment : Fragment() {
                             val dataToSave: MutableMap<String, Any> =
                                 HashMap()
 
-                            dataToSave["name"] = newName.text.toString()
-                            dataToSave["surname"] = newSurname.text.toString()
-                            dataToSave["username"] = newUsername.text.toString()
-                            dataToSave["phone"] = newPhone.text.toString()
+                            if(!TextUtils.isEmpty(newName.text.toString())) {
+                                dataToSave["name"] = newName.text.toString()
+                            }
+                            if(!TextUtils.isEmpty(newSurname.text.toString())) {
+                                dataToSave["surname"] = newSurname.text.toString()
+                            }
+                            if(!TextUtils.isEmpty(newUsername.text.toString())) {
+                                dataToSave["username"] = newUsername.text.toString()
+                            }
+                            if(!TextUtils.isEmpty(newPhone.text.toString())) {
+                                dataToSave["phone"] = newPhone.text.toString()
+                            }
 
 
                             Log.d("TAG", "User does not exist")
