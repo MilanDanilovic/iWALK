@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/edit_profile_fragment"
     tools:context=".EditProfileFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#001419">
@@ -23,157 +24,191 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/user_profile_name"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEditConfirmCancel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="Name"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@+id/user_profile_surname"
-            app:layout_constraintHorizontal_bias="0.883"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_picture"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_picture" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/user_profile_surname"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/edit_user_save"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="170dp"
+                app:srcCompat="@drawable/ic_save_changes" />
+
+            <ImageView
+                android:id="@+id/edit_user_cancel"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/ic_cancel_changes" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEditName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="132dp"
-            android:text="Surname"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_picture" />
-
-        <ImageView
-            android:id="@+id/edit_user_save"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="40dp"
-            app:layout_constraintEnd_toStartOf="@+id/edit_user_cancel"
-            app:layout_constraintHorizontal_bias="0.226"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_surname"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
-            app:srcCompat="@drawable/ic_save_changes" />
-
-        <ImageView
-            android:id="@+id/edit_user_cancel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="-20dp"
-            android:layout_marginTop="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_user_save"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
-            app:srcCompat="@drawable/ic_cancel_changes" />
-
-        <TextView
-            android:id="@+id/user_profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginRight="10dp"
-            android:text=" Username:"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@+id/user_profile_username_value"
-            app:layout_constraintHorizontal_bias="0.428"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutEditConfirmCancel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/user_profile_username_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="#FFFFFF"
-            android:ems="10"
-            android:hint="username"
-            android:maxLines="20"
-            android:minLines="2"
-            android:scrollbars="vertical"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_username"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_name" />
+            <TextView
+                android:id="@+id/user_profile_name"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:text=" Name:"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/user_profile_phone"
-            android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/user_profile_name_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:hint=""
+                android:maxLines="20"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEditSurname"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginRight="10dp"
-            android:text=" Phone:"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@+id/user_profile_phone_value"
-            app:layout_constraintHorizontal_bias="0.428"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutEditName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_username" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/user_profile_phone_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="#FFFFFF"
-            android:ems="10"
-            android:hint="+381 123 456"
-            android:maxLines="20"
-            android:minLines="2"
-            android:scrollbars="vertical"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_phone"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_username" />
+            <TextView
+                android:id="@+id/user_profile_surname"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:text=" Surname:"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/user_profile_email"
-            android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/user_profile_surname_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:hint=""
+                android:maxLines="20"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEditUsername"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginRight="10dp"
-            android:text=" Email:"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@+id/user_profile_email_value"
-            app:layout_constraintHorizontal_bias="0.405"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutEditSurname"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_phone" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/user_profile_email_value"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/user_profile_username"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:text=" Username:"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/user_profile_username_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:hint=""
+                android:maxLines="20"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEditPhone"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="#FFFFFF"
-            android:ems="10"
-            android:hint="+381 123 456"
-            android:maxLines="20"
-            android:minLines="2"
-            android:scrollbars="vertical"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_email"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_phone" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutEditUsername"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/user_profile_phone"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="10dp"
+                android:text=" Phone:"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/user_profile_phone_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFFFFF"
+                android:ems="10"
+                android:hint=""
+                android:maxLines="20"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
