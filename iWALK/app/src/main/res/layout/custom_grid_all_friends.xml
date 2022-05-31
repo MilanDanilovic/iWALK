@@ -3,23 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#001419"
-    android:id="@+id/custom_grid_walkers"
+    android:id="@+id/custom_grid_all_friends"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_layout_walkers"
+        android:id="@+id/constraint_layout_all_friends"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_margin="4dp"
         android:background="#001419"
         app:cardElevation="3dp"
         app:cardUseCompatPadding="true">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/walker_profile_picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/all_friends_profile_picture"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_user"
             app:layout_constraintHorizontal_bias="0.02"
@@ -27,27 +27,27 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/walker_username_value"
+            android:id="@+id/all_friends_username_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="30dp"
             android:text="username"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/walker_profile_picture"
+            app:layout_constraintStart_toEndOf="@+id/all_friends_profile_picture"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/walkers_send_message"
+            android:id="@+id/all_friends_delete_friend"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.888"
-            app:layout_constraintStart_toEndOf="@+id/walker_username_value"
+            app:layout_constraintStart_toEndOf="@+id/all_friends_username_value"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_send_message" />
+            app:srcCompat="@drawable/ic_cancel_changes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
