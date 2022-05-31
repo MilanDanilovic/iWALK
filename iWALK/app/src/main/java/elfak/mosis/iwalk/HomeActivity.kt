@@ -19,6 +19,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var drawer : DrawerLayout
     private lateinit var addPost : ImageView
+    private lateinit var notifications : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer = findViewById(R.id.drawer_layout);
         addPost = findViewById(R.id.addposts)
+        notifications = findViewById(R.id.notifications)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -54,6 +56,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         addPost.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, AddPostFragment()).commit()
+        }
+
+        notifications.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NotifiactionsFragment()).commit()
         }
 
     }
