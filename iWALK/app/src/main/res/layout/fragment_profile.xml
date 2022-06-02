@@ -86,7 +86,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="0dp"
                 android:textColor="#FFFFFF"
-                android:text="email"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -118,7 +117,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="0dp"
-                android:text="username"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -150,7 +148,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="1500"
                 android:layout_marginEnd="0dp"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
@@ -184,7 +181,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="0dp"
-                android:text="100"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -214,7 +210,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="0dp"
                     android:textColor="#FFFFFF"
-                    android:text="+381 234 567"
                     android:textSize="16sp" />
         </LinearLayout>
 

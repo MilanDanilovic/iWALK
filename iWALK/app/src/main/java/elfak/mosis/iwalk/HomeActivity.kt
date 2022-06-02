@@ -89,6 +89,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, MyPetsFragment()).commit()
             R.id.nav_posts -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, PostsFragment()).commit()
+            R.id.nav_walks -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, WalksFragment()).commit()
             R.id.nav_logout -> {
                 Firebase.auth.signOut()
                 val i: Intent = Intent(this, MainActivity::class.java)
