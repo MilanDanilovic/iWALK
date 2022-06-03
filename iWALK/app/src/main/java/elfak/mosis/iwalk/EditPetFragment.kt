@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.firebase.firestore.FirebaseFirestore
 
 class EditPetFragment : Fragment() {
 
@@ -18,6 +22,8 @@ class EditPetFragment : Fragment() {
     private lateinit var breed : EditText
     private lateinit var weight : EditText
     private lateinit var description : EditText
+    var petId: String? = null
+    private val docRef = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +43,8 @@ class EditPetFragment : Fragment() {
             breed.setText(bundle.getString("pet_breed"))
             weight.setText(bundle.getString("pet_weight"))
             description.setText(bundle.getString("pet_description"))
-            //val myInt = bundle.getInt(key, defaultValue)
+            petId = bundle.getString("pet_id")
         }
-        /*name.setText(activity?.getIntent()?.getExtras()?.getString("pet_name"))
-        breed.setText(activity?.getIntent()?.getExtras()?.getString("pet_breed"))
-        weight.setText(activity?.getIntent()?.getExtras()?.getString("pet_weight"))
-        description.setText(activity?.getIntent()?.getExtras()?.getString("pet_description"))*/
-        //description.setText(resultList[3])
 
         val cancel: Button = requireView().findViewById<Button>(R.id.button_cancel_edit_pet)
         val edit: Button = requireView().findViewById<Button>(R.id.button_edit_pet)
@@ -75,6 +76,34 @@ class EditPetFragment : Fragment() {
                 fragmentTransaction.replace(R.id.edit_pet_fragment, fragment)
                 fragmentTransaction.addToBackStack(null)
                 fragmentTransaction.commit()
+
+                val newName = name.text.toString()
+                val newBreed = breed.text.toString()
+                val newWeight = weight.text.toString()
+                val newDescription = description.text.toString()
+                val petsRef = docRef.collection("pets")
+
+                val documentReference = petId?.let { it1 -> docRef.collection("pets").document(it1) }
+                documentReference?.update(
+                    "name", newName,
+                    "breed", newBreed,
+                    "weight", newWeight,
+                    "description", newDescription
+                )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            context,
+                            "Data successfully updated.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error updating data.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })?.addOnFailureListener(OnFailureListener { })
             })
             alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
             alertDialog.show()

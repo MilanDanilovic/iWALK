@@ -40,27 +40,9 @@ class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
             bundle.putString("pet_breed", petsList[myPetHolder.adapterPosition].getPetBreed())
             bundle.putString("pet_weight", petsList[myPetHolder.adapterPosition].getPetWeight())
             bundle.putString("pet_description", petsList[myPetHolder.adapterPosition].getPetDescription())
+            bundle.putString("pet_id", petsList[myPetHolder.adapterPosition].getPetId())
             editPetFragment.setArguments(bundle)
             activity.supportFragmentManager.beginTransaction().replace(R.id.my_pets_fragment, editPetFragment).commit()
-            //val intent = Intent(ctx, EditPetFragment::class.java)
-            //val lista = ArrayList<String>()
-            //petsList[myPetHolder.adapterPosition].getPetName()?.let { lista.add(it) }
-            //petsList[myPetHolder.adapterPosition].getPetBreed()?.let { lista.add(it) }
-            //petsList[myPetHolder.adapterPosition].getPetWeight()?.let { lista.add(it) }
-            //petsList[myPetHolder.adapterPosition].getPetDescription()?.let { lista.add(it) }
-            //intent.putStringArrayListExtra("myPetsList", lista)
-            //ctx.startActivity(intent)
-
-            /*val myFragment: Fragment = EditPetFragment()
-
-
-            val yourFragment = EditPetFragment()
-            val args = Bundle()
-            args.putString("pet_name", petsList[myPetHolder.adapterPosition].getPetName())
-            args.putString("pet_breed", petsList[myPetHolder.adapterPosition].getPetBreed())
-            args.putString("pet_weight", petsList[myPetHolder.adapterPosition].getPetWeight())
-            args.putString("pet_description", petsList[myPetHolder.adapterPosition].getPetDescription())
-            yourFragment.setArguments(args)*/
         })
     }
 
