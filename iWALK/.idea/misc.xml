@@ -41,11 +41,13 @@
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_post.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_all_friends.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_pet.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.176" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_favourite_walkers.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_find_friends.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_message_for_walker.xml" value="0.2" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_my_pets.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_my_walks.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_new_posts.xml" value="0.1703125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_notifiactions.xml" value="0.1703125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_persons_pets.xml" value="0.25416666666666665" />
@@ -53,6 +55,7 @@
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_posts.xml" value="0.1703125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_requests_friends.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_walks.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/nav_header.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/menu/drawer_menu.xml" value="0.253125" />
       </map>
