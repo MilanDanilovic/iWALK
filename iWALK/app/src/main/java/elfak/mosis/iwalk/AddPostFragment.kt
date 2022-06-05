@@ -1,8 +1,6 @@
 package elfak.mosis.iwalk
 
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -96,6 +94,8 @@ class AddPostFragment : Fragment() {
                 if (query != null) {
                     dataToSave["userId"] = query
                 }
+                dataToSave["timeOfPosting"] = Calendar.getInstance().time
+                dataToSave["status"] = "OPEN"
 
                 docRef.collection("posts").add(dataToSave).addOnSuccessListener {
                     Log.d("TAG", "Post is saved! ")
