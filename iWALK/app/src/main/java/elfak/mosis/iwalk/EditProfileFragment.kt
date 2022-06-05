@@ -1,8 +1,11 @@
 package elfak.mosis.iwalk
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +19,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlin.collections.HashMap
 
 class EditProfileFragment : Fragment() {
 
@@ -26,7 +34,12 @@ class EditProfileFragment : Fragment() {
     private lateinit var newPhone : EditText
 
     private lateinit var baseAuth: FirebaseAuth
+    private lateinit var imageUri: Uri
+    private lateinit var userImage : CircleImageView
+    private lateinit var imageUrl : String
+    private lateinit var oldUsername : String
     private val docRef = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +50,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userImage = requireView().findViewById<CircleImageView>(R.id.user_profile_picture)
         val cancel: ImageView = requireView().findViewById<ImageView>(R.id.edit_user_cancel)
         val save: ImageView = requireView().findViewById<ImageView>(R.id.edit_user_save)
 
@@ -45,6 +59,38 @@ class EditProfileFragment : Fragment() {
         newUsername = requireView().findViewById<EditText>(R.id.user_profile_username_value)
         newPhone = requireView().findViewById<EditText>(R.id.user_profile_phone_value)
 
+        val usersRef: CollectionReference = docRef.collection("users")
+        usersRef.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document.id == FirebaseAuth.getInstance().currentUser!!.uid) {
+                            newUsername.setText(document["username"].toString())
+                            oldUsername = document["username"].toString()
+                            newName.setText(document["name"].toString())
+                            newSurname.setText(document["surname"].toString())
+                            newPhone.setText(document["phone"].toString())
+                            if (document["profileImageUrl"].toString() != "default") {
+                                Picasso.get().load(document["profileImageUrl"].toString())
+                                    .into(userImage)
+                            }
+                            imageUrl = document["profileImageUrl"].toString()
+                            Log.d("TAG", document.id + " => " + document["username"])
+                            break
+                        }
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.exception)
+                }
+            }
+
+        userImage.setOnClickListener{
+
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 71)
+        }
 
         cancel.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.requireContext(), R.style.Theme_PopUpDialog)
@@ -96,7 +142,7 @@ class EditProfileFragment : Fragment() {
                                 }
                             }
                         }
-                        if (task.result.size() == 0) {
+                        if (task.result.size() == 0 || userName == oldUsername) {
 
                             val dataToSave: MutableMap<String, Any> =
                                 HashMap()
@@ -112,6 +158,9 @@ class EditProfileFragment : Fragment() {
                             }
                             if(!TextUtils.isEmpty(newPhone.text.toString())) {
                                 dataToSave["phone"] = newPhone.text.toString()
+                            }
+                            if(!TextUtils.isEmpty(imageUrl)){
+                                dataToSave["profileImageUrl"] = imageUrl
                             }
 
 
@@ -161,4 +210,33 @@ class EditProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 71 ) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    imageUri = data.data!!
+                }
+                userImage.setImageURI(imageUri)
+                //mora se pamtiti u storage
+                val bitmap = MediaStore.Images.Media.getBitmap(this@EditProfileFragment.context?.contentResolver, imageUri)
+                userImage.setImageBitmap(bitmap)
+
+                uploadImage()
+            }
+        }
+    }
+    private fun uploadImage() {
+        val ref = storage.child("userImages/" + FirebaseAuth.getInstance().currentUser?.uid)
+        val uploadTask = ref.putFile(imageUri)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl = uri.toString()
+
+            }
+        }
+    }
+
 }
