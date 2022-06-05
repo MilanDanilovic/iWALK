@@ -51,7 +51,8 @@ class MyPetsFragment : Fragment() {
                                 document.getString("breed"),
                                 document.getString("weight"),
                                 document.getString("description"),
-                                document.getString("userId")
+                                document.getString("userId"),
+                                document.getString("petImageUrl")
                             )
                             petsList!!.add(pet!!)
                             adapterMyPets = context?.let { AdapterMyPets(it, petsList!!) }
