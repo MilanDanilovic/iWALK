@@ -17,16 +17,16 @@ class Post {
         postDate: String?,
         postTime: String?,
         postUserId: String?,
-        //postDogImage1: String?,
-        //postDogImage2: String?
+        postDogImage1: String?,
+        postDogImage2: String?
     ) {
         this.postId = postId
         this.postDescription = postDescription
         this.postDate = postDate
         this.postTime = postTime
         this.postUserId = postUserId
-        //this.postDogImage1 = postDogImage1
-        //this.postDogImage2 = postDogImage2
+        this.postDogImage1 = postDogImage1
+        this.postDogImage2 = postDogImage2
     }
 
     constructor(

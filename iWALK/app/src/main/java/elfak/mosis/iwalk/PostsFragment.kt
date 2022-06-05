@@ -49,7 +49,9 @@ class PostsFragment : Fragment() {
                                 document.getString("description"),
                                 document.getString("date"),
                                 document.getString("time"),
-                                document.getString("description")
+                                document.getString("userId"),
+                                document.getString("dogImage1Url"),
+                                document.getString("dogImage2Url")
                             )
                             postsList!!.add(post!!)
                             adapterMyPosts = context?.let { AdapterMyPosts(it, postsList!!) }
