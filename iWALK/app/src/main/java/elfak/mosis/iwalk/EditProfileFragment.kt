@@ -19,8 +19,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.collections.HashMap
 
@@ -35,6 +37,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var imageUri: Uri
     private lateinit var userImage : CircleImageView
     private lateinit var imageUrl : String
+    private lateinit var oldUsername : String
     private val docRef = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance().reference
 
@@ -55,6 +58,31 @@ class EditProfileFragment : Fragment() {
         newSurname = requireView().findViewById<EditText>(R.id.user_profile_surname_value)
         newUsername = requireView().findViewById<EditText>(R.id.user_profile_username_value)
         newPhone = requireView().findViewById<EditText>(R.id.user_profile_phone_value)
+
+        val usersRef: CollectionReference = docRef.collection("users")
+        usersRef.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document.id == FirebaseAuth.getInstance().currentUser!!.uid) {
+                            newUsername.setText(document["username"].toString())
+                            oldUsername = document["username"].toString()
+                            newName.setText(document["name"].toString())
+                            newSurname.setText(document["surname"].toString())
+                            newPhone.setText(document["phone"].toString())
+                            if (document["profileImageUrl"].toString() != "default") {
+                                Picasso.get().load(document["profileImageUrl"].toString())
+                                    .into(userImage)
+                            }
+                            imageUrl = document["profileImageUrl"].toString()
+                            Log.d("TAG", document.id + " => " + document["username"])
+                            break
+                        }
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.exception)
+                }
+            }
 
         userImage.setOnClickListener{
 
@@ -114,7 +142,7 @@ class EditProfileFragment : Fragment() {
                                 }
                             }
                         }
-                        if (task.result.size() == 0) {
+                        if (task.result.size() == 0 || userName == oldUsername) {
 
                             val dataToSave: MutableMap<String, Any> =
                                 HashMap()

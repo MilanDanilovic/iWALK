@@ -17,6 +17,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 class ProfileFragment : Fragment() {
 
@@ -27,6 +29,7 @@ class ProfileFragment : Fragment() {
     private lateinit var email : TextView
     private lateinit var name : TextView
     private lateinit var surname : TextView
+    private lateinit var image : CircleImageView
 
     private lateinit var  auth : FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
@@ -67,7 +70,7 @@ class ProfileFragment : Fragment() {
         email = requireView().findViewById<TextView>(R.id.user_profile_email_value)
         name = requireView().findViewById<TextView>(R.id.user_profile_name)
         surname = requireView().findViewById<TextView>(R.id.user_profile_surname)
-
+        image = requireView().findViewById<CircleImageView>(R.id.user_profile_picture)
 
         val userIdValue: String = user.uid
 
@@ -84,10 +87,10 @@ class ProfileFragment : Fragment() {
                             phoneNumber.text = document["phone"].toString()
                             numberOfWalks.text = document["numberOfWalks"].toString()
                             score.text = document["score"].toString()
-//                            if (document["profileImageUrl"].toString() != "default") {
-//                                Picasso.get().load(document["profileImageUrl"].toString())
-//                                    .into(image)
-//                            }
+                            if (document["profileImageUrl"].toString() != "default") {
+                                Picasso.get().load(document["profileImageUrl"].toString())
+                                    .into(image)
+                            }
                             Log.d("TAG", document.id + " => " + document["username"])
                             break
                         }
