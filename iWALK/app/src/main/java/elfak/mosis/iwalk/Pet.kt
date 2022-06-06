@@ -15,8 +15,8 @@ class Pet {
         petBreed: String?,
         petWeight: String?,
         petDescription: String?,
-        petUserId: String?
-        //petImage: String?
+        petUserId: String?,
+        petImage: String?
     ) {
         this.petId = petId
         this.petName = petName
@@ -24,7 +24,7 @@ class Pet {
         this.petWeight = petWeight
         this.petDescription = petDescription
         this.petUserId = petUserId
-        //this.petImage = petImage
+        this.petImage = petImage
     }
 
 

@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 
 
 class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
@@ -31,6 +32,8 @@ class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
         myPetHolder.petBreed.setText(petsList[position].getPetBreed())
         myPetHolder.petWeight.setText(petsList[position].getPetWeight())
         myPetHolder.petDescription.setText(petsList[position].getPetDescription())
+        Picasso.get().load(petsList[position].getPetImage())
+            .into(myPetHolder.petImage)
         baseAuth = FirebaseAuth.getInstance()
         myPetHolder.constraintLayoutMyPets.setOnClickListener(View.OnClickListener { v ->
             val activity= v!!.context as AppCompatActivity
@@ -41,6 +44,7 @@ class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
             bundle.putString("pet_weight", petsList[myPetHolder.adapterPosition].getPetWeight())
             bundle.putString("pet_description", petsList[myPetHolder.adapterPosition].getPetDescription())
             bundle.putString("pet_id", petsList[myPetHolder.adapterPosition].getPetId())
+            bundle.putString("pet_image", petsList[myPetHolder.adapterPosition].getPetImage())
             editPetFragment.setArguments(bundle)
             activity.supportFragmentManager.beginTransaction().replace(R.id.my_pets_fragment, editPetFragment).commit()
         })

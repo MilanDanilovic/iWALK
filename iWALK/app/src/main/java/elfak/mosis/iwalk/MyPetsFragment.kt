@@ -36,9 +36,9 @@ class MyPetsFragment : Fragment() {
 
         petsList = ArrayList<Pet>()
         auth = Firebase.auth
-        val petstRef: CollectionReference = docRef.collection("pets")
+        val petsRef: CollectionReference = docRef.collection("pets")
         recyclerView = view.findViewById<View>(R.id.my_pets_recycler) as RecyclerView
-        petstRef.get()
+        petsRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
@@ -51,7 +51,8 @@ class MyPetsFragment : Fragment() {
                                 document.getString("breed"),
                                 document.getString("weight"),
                                 document.getString("description"),
-                                document.getString("userId")
+                                document.getString("userId"),
+                                document.getString("petImageUrl")
                             )
                             petsList!!.add(pet!!)
                             adapterMyPets = context?.let { AdapterMyPets(it, petsList!!) }

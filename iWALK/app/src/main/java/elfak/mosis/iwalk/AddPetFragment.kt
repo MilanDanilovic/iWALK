@@ -1,7 +1,11 @@
 package elfak.mosis.iwalk
 
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +23,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 
 class AddPetFragment : Fragment() {
 
@@ -26,6 +32,10 @@ class AddPetFragment : Fragment() {
     private lateinit var breed : EditText
     private lateinit var weight : EditText
     private lateinit var description : EditText
+    private lateinit var image : CircleImageView
+    private lateinit var imageUri: Uri
+    private lateinit var imageUrl : String
+    private val storage = FirebaseStorage.getInstance().reference
     private lateinit var auth: FirebaseAuth
     private val docRef = FirebaseFirestore.getInstance()
 
@@ -42,6 +52,14 @@ class AddPetFragment : Fragment() {
         breed = requireView().findViewById<EditText>(R.id.pet_add_breed_value)
         weight = requireView().findViewById<EditText>(R.id.pet_add_weight_value)
         description = requireView().findViewById<EditText>(R.id.pet_add_description_value)
+        image = requireView().findViewById<CircleImageView>(R.id.pet_add_picture)
+
+        image.setOnClickListener{
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 71)
+        }
 
         val cancel: Button = requireView().findViewById<Button>(R.id.button_cancel_add_pet)
         cancel.setOnClickListener {
@@ -97,9 +115,12 @@ class AddPetFragment : Fragment() {
                 if (query != null) {
                     dataToSave["userId"] = query
                 }
+                if(!TextUtils.isEmpty(imageUrl)){
+                    dataToSave["petImageUrl"] = imageUrl
+                }
 
                 docRef.collection("pets").add(dataToSave).addOnSuccessListener {
-                    Log.d("TAG", "Post is saved! ")
+                    Log.d("TAG", "Pet is saved! ")
                     Toast.makeText(
                         context,
                         "Pet is saved in database!",
@@ -130,6 +151,33 @@ class AddPetFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 71 ) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    imageUri = data.data!!
+                    image.setImageURI(imageUri)
+                    val bitmap = MediaStore.Images.Media.getBitmap(this@AddPetFragment.context?.contentResolver, imageUri)
+                    image.setImageBitmap(bitmap)
+                    uploadImage()
+                }
+            }
+        }
+    }
+
+    private fun uploadImage() {
+        val ref = storage.child("myPetsImages/" + System.currentTimeMillis())
+        val uploadTask = ref.putFile(imageUri)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl = uri.toString()
+
+            }
+        }
     }
 
 }
