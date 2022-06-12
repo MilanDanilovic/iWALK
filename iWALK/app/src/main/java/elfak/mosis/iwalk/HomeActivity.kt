@@ -25,6 +25,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer : DrawerLayout
     private lateinit var addPost : ImageView
     private lateinit var notifications : ImageView
+    private val db = FirebaseFirestore.getInstance()
     private val docRef = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,54 +99,61 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_walks -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, WalksFragment()).commit()
             R.id.nav_logout -> {
-                clearToken(FirebaseAuth.getInstance().currentUser!!.uid)
-                Firebase.auth.signOut()
-                val i: Intent = Intent(this, MainActivity::class.java)
-                startActivity(i)
+                clearTokensAndLogOut()
             }
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun clearToken(userId:String) {
-        var tokenValue: String? = null
+    private fun clearTokensAndLogOut() {
+
         var tokenId: String? = null
-        val tokens: CollectionReference = docRef.collection("tokens")
+        val tokens: CollectionReference = db.collection("tokens")
         tokens.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        if (document.get(userId) == FirebaseAuth.getInstance().currentUser!!.uid) {
+
+                        if (document["userId"] == FirebaseAuth.getInstance().currentUser!!.uid) {
                             tokenId = document.id
-                            tokenValue = document[userId].toString()
+
+                            docRef.collection("tokens").document(tokenId!!)
+                                .delete()
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Firebase.auth.signOut()
+                                        val i: Intent = Intent(this, MainActivity::class.java)
+                                        startActivity(i)
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "tokens is deleted!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Error deleting tokens!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        Log.w(
+                                            "TAG",
+                                            "Error deleting tokens"
+                                        )
+                                    }
+                                }
                         }
                     }
                 }
                 else {
-                    Log.d("TAG", "Error getting documents: ", task.exception)
+                    Log.d("TAG", "Error getting tokens: ", task.exception)
                 }
             }
-        val tokensRef = docRef.collection("tokens").document(tokenId!!)
-            .delete()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        applicationContext,
-                        "tokens is deleted!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        "Error deleting tokens!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    Log.w(
-                        "TAG",
-                        "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"
-                    )
-                }
-            }
+            .addOnFailureListener{task -> Toast.makeText(
+                applicationContext,
+                "Error deleting tokens!",
+                Toast.LENGTH_LONG
+            ).show()}
+
     }
 }

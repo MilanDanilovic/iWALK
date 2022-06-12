@@ -140,8 +140,11 @@ class LoginActivity : AppCompatActivity() {
                     val dataToSave: MutableMap<String, Any> =
                         HashMap()
 
-                    if (token != null && userId != null) {
-                        dataToSave[userId] = token
+                    if (token != null) {
+                        dataToSave["tokenValue"] = token
+                    }
+                    if (userId != null) {
+                        dataToSave["userId"] = userId
                     }
 
                     docRef.collection("tokens").add(dataToSave).addOnSuccessListener {
