@@ -18,7 +18,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var email : TextInputEditText
     private lateinit var password : TextInputEditText
     private lateinit var forgottenPassword : TextView
+    private val docRef = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +67,8 @@ class LoginActivity : AppCompatActivity() {
                                     "Succesful login!",
                                     Toast.LENGTH_SHORT
                                 ).show()
+
+                                retrieveAndStoreToken()
 
                                 startActivity(Intent(applicationContext, HomeActivity::class.java))
                             } else{
@@ -123,6 +129,44 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun retrieveAndStoreToken() {
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token: String? = task.result
+                    val userId : String? = FirebaseAuth.getInstance().uid
+                    val tokensRef: CollectionReference = docRef.collection("tokens")
+                    val dataToSave: MutableMap<String, Any> =
+                        HashMap()
+
+                    if (token != null) {
+                        dataToSave["tokenValue"] = token
+                    }
+                    if (userId != null) {
+                        dataToSave["userId"] = userId
+                    }
+
+                    docRef.collection("tokens").add(dataToSave).addOnSuccessListener {
+                        Log.d("TAG", "Pet is saved! ")
+                        Toast.makeText(
+                            applicationContext,
+                            "tokens is saved in database!",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(
+                            applicationContext,
+                            "tokens is not saved! Try again! ",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.w("TAG", "tokens is not saved in database! ", e)
+                    }
+                }
+            }
+
+    }
 
     public override fun onStart() {
         super.onStart()
