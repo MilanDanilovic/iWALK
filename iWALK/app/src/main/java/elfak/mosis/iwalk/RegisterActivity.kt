@@ -13,8 +13,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -27,6 +29,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var surname : TextInputEditText
     private lateinit var register : Button
     private lateinit var auth: FirebaseAuth
+    private val docRef = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +114,7 @@ class RegisterActivity : AppCompatActivity() {
                                                            startActivity(Intent(applicationContext, MainActivity::class.java))
 
                                                        }
+                                                   retrieveAndStoreToken()
                                                }).addOnFailureListener { e ->
                                                         Log.w("TAG", "User is not saved in database! ", e)
                                            }
@@ -131,5 +135,41 @@ class RegisterActivity : AppCompatActivity() {
                confirmPassword.error = "Password values need to have same value"
            }
        }
+    }
+
+    private fun retrieveAndStoreToken() {
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token: String? = task.result
+                    val userId : String? = FirebaseAuth.getInstance().uid
+                    val tokensRef: CollectionReference = docRef.collection("tokens")
+                    val dataToSave: MutableMap<String, Any> =
+                        HashMap()
+
+                    if (userId != null) {
+                        dataToSave["userId"] = userId
+                    }
+
+                    docRef.collection("tokens").add(dataToSave).addOnSuccessListener {
+                        Log.d("TAG", "Pet is saved! ")
+                        Toast.makeText(
+                            applicationContext,
+                            "tokens is saved in database!",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(
+                            applicationContext,
+                            "tokens is not saved! Try again! ",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.w("TAG", "tokens is not saved in database! ", e)
+                    }
+                }
+            }
+
     }
 }
