@@ -136,7 +136,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val token: String? = task.result
                     val userId : String? = FirebaseAuth.getInstance().uid
-                    val tokensRef: CollectionReference = docRef.collection("tokens")
                     val dataToSave: MutableMap<String, Any> =
                         HashMap()
 

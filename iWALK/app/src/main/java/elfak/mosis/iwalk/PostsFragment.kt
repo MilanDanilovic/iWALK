@@ -62,8 +62,6 @@ class PostsFragment : Fragment() {
                     Log.d("TAG", "Error getting documents: ", task.exception)
                 }
             }
-        /*
-        */
 
         val newPosts: TextView = requireView().findViewById<TextView>(R.id.new_posts_tab_my_posts)
         newPosts.setOnClickListener(View.OnClickListener {
