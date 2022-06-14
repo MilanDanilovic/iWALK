@@ -45,8 +45,8 @@
             android:layout_marginStart="116dp"
             android:layout_marginTop="33dp"
             app:layout_constraintStart_toEndOf="@+id/find_friends_username_value"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_post" />
+            app:layout_constraintTop_toTopOf="parent"/>
+        // app:srcCompat="@drawable/ic_add_post" />
 
         <ImageView
             android:id="@+id/find_friends_add_friend_bluetooth"

@@ -72,6 +72,7 @@ class FindFriendsFragment : Fragment() {
                                 val bundle = Bundle()
                                 bundle.putString("user_username", document.getString("username"))
                                 bundle.putString("user_image", document.getString("profileImageUrl"))
+                                bundle.putString("user_id", document.id)
                                 customFindFriendFragment.setArguments(bundle)
                                 activity.supportFragmentManager.beginTransaction().replace(R.id.linear_layout_replace, customFindFriendFragment).commit()
                                 Log.d("TAG", "user exist")
