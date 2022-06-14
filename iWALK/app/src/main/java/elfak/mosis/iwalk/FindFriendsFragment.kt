@@ -5,10 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -83,13 +80,9 @@ class FindFriendsFragment : Fragment() {
                     } else {
                         Log.d("TAG", "Error getting documents: ", task.exception)
                     }
-                    if (counter == 0 ) {//task.result.size() == 0
-                        val fragment: Fragment = FindFriendsFragment()
-                        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.find_friends_fragment, fragment)
-                        fragmentTransaction.addToBackStack(null)
-                        fragmentTransaction.commit()
+                    if (counter == 0 ) {
+                        val linearLayoutReplace: LinearLayout = requireView().findViewById<LinearLayout>(R.id.linear_layout_replace)
+                        linearLayoutReplace.removeAllViews()
                         Toast.makeText(
                             context,
                             "User does not exist! ",
