@@ -28,7 +28,7 @@ class CustomGridFindFriendsFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
-    private lateinit var requestAlreadySent: String
+    private var requestAlreadySent: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,55 +73,117 @@ class CustomGridFindFriendsFragment : Fragment() {
                 }
             }
 
-        addFriend.setOnClickListener (View.OnClickListener {
-            usersSenderRef.get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            if (document.id == auth.currentUser?.uid) {
-                                var usernameToSave: String = document["username"].toString()
-                                var userImageToSave: String = document["profileImageUrl"].toString()
-                                usersReceiverRef.get()
-                                    .addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            for (documentReceiver in task.result) {
-                                                if (documentReceiver.getString("username") == username.text.toString()) {
-
-                                                    val dataToSave: MutableMap<String, Any> =
-                                                        HashMap()
-                                                    dataToSave["senderUsername"] = usernameToSave
-                                                    dataToSave["senderImage"] = userImageToSave
-                                                    dataToSave["sender"] = auth.currentUser?.uid!!
-                                                    dataToSave["receiver"] = documentReceiver.id
-
-                                                    db.collection("friendRequests").add(dataToSave).addOnSuccessListener {
-                                                        Log.d("TAG", "Friend request is saved! ")
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Friend request is sent!",
-                                                            Toast.LENGTH_LONG
-                                                        )
-                                                            .show()
-                                                    }.addOnFailureListener { e ->
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Friend request is not saved! Try again! ",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                        Log.w("TAG", "Friend request is not saved in database! ", e)
+        addFriend.setOnClickListener(View.OnClickListener {
+            if (requestAlreadySent == "true") {
+                usersReceiverRef.get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                if (document["username"] == username.text.toString()) {
+                                    friendRequests.get()
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                for (documentRequest in task.result) {
+                                                    if (documentRequest.getString("sender") == auth.currentUser!!.uid && documentRequest.getString("receiver") == document.id) {
+                                                        db.collection("friendRequests")
+                                                            .document(documentRequest.id)
+                                                            .delete()
+                                                            .addOnCompleteListener { task ->
+                                                                if (task.isSuccessful) {
+                                                                    db.collection("friendRequestsposts").document(
+                                                                        documentRequest.id
+                                                                    )
+                                                                        .delete()
+                                                                        .addOnSuccessListener {
+                                                                            Log.d(
+                                                                                "TAG",
+                                                                                "DocumentSnapshot successfully deleted!"
+                                                                            )
+                                                                        }
+                                                                        .addOnFailureListener { e ->
+                                                                            Log.w(
+                                                                                "TAG",
+                                                                                "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA",
+                                                                                e
+                                                                            )
+                                                                        }
+                                                                    Toast.makeText(context, "Friend request is deleted!", Toast.LENGTH_LONG).show()
+                                                                } else {
+                                                                    Toast.makeText(
+                                                                        context,
+                                                                        "Error deleting friend request!",
+                                                                        Toast.LENGTH_LONG
+                                                                    ).show()
+                                                                    Log.w(
+                                                                        "TAG",
+                                                                        "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                                                    )
+                                                                }
+                                                            }
                                                     }
                                                 }
+                                            } else {
+                                                Log.d("TAG", "Error getting documents: ", task.exception)
                                             }
-                                        } else {
-                                            Log.d("TAG", "Error getting documents: ", task.exception)
                                         }
-                                    }
+                                }
                             }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.exception)
                         }
-                    } else {
-                        Log.d("TAG", "Error getting documents: ", task.exception)
                     }
-                }
+            }
+            else if (requestAlreadySent == "false") {
+                usersSenderRef.get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                if (document.id == auth.currentUser?.uid) {
+                                    var usernameToSave: String = document["username"].toString()
+                                    var userImageToSave: String = document["profileImageUrl"].toString()
+                                    usersReceiverRef.get()
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                for (documentReceiver in task.result) {
+                                                    if (documentReceiver.getString("username") == username.text.toString()) {
+
+                                                        val dataToSave: MutableMap<String, Any> =
+                                                            HashMap()
+                                                        dataToSave["senderUsername"] = usernameToSave
+                                                        dataToSave["senderImage"] = userImageToSave
+                                                        dataToSave["sender"] = auth.currentUser?.uid!!
+                                                        dataToSave["receiver"] = documentReceiver.id
+
+                                                        db.collection("friendRequests").add(dataToSave).addOnSuccessListener {
+                                                            Log.d("TAG", "Friend request is saved! ")
+                                                            addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_cancel_changes))
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Friend request is sent!",
+                                                                Toast.LENGTH_LONG
+                                                            )
+                                                                .show()
+                                                        }.addOnFailureListener { e ->
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Friend request is not saved! Try again! ",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                            Log.w("TAG", "Friend request is not saved in database! ", e)
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                Log.d("TAG", "Error getting documents: ", task.exception)
+                                            }
+                                        }
+                                }
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.exception)
+                        }
+                    }
+            }
         })
     }
 
