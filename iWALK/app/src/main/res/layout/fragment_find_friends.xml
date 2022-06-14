@@ -62,82 +62,78 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutFindFriends">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutFindFriends"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <ScrollView
-                android:id="@+id/scroll"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_find_friends_custom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
+                    android:id="@+id/linearLayoutSearch"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" >
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutSearch"
-                        android:layout_width="match_parent"
+                    <EditText
+                        android:id="@+id/find_friend_input"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" >
-
-                        <EditText
-                            android:id="@+id/find_friend_input"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="#FFFFFF"
-                            android:ems="10"
-                            android:hint="Search"
-                            android:layout_marginStart="100dp"
-                            android:maxLines="2"
-                            android:minLines="1"
-                            android:scrollbars="vertical"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#FFFFFF"
-                            android:textSize="15sp" />
-
-                        <Button
-                            android:id="@+id/find_friend_button"
-                            android:layout_width="100dp"
-                            android:layout_marginStart="20dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/btn_bg"
-                            android:text="Find"
-                            android:textColor="#FFFFFF"
-                            android:textSize="19sp" />
-                    </LinearLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/find_friends_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:backgroundTint="#FFFFFF"
+                        android:ems="10"
+                        android:hint="Search"
+                        android:layout_marginStart="100dp"
+                        android:maxLines="2"
+                        android:minLines="1"
                         android:scrollbars="vertical"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayoutSearch" />
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#FFFFFF"
+                        android:textSize="15sp" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <Button
+                        android:id="@+id/find_friend_button"
+                        android:layout_width="100dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/btn_bg"
+                        android:text="Find"
+                        android:textColor="#FFFFFF"
+                        android:textSize="19sp" />
+                </LinearLayout>
 
-            </ScrollView>
+                <LinearLayout
+                    android:id="@+id/linear_layout_replace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutSearch"
+                    android:orientation="vertical" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="180dp"
+                android:layout_marginTop="360dp"
                 android:foregroundGravity="bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scroll"
+                app:layout_constraintTop_toBottomOf="@+id/constraint_layout_find_friends_custom"
                 app:srcCompat="@drawable/ic_logo"/>
 
 

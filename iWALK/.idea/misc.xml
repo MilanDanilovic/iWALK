@@ -12,6 +12,9 @@
         <entry key="..\:/FAX/mosis/iWALK/app/src/main/res/drawable/btn_bg.xml" value="0.1105" />
         <entry key="..\:/FAX/mosis/iWALK/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/FAX/mosis/iWALK/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/janaa/Desktop/mosis pokusaj/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_find_friends.xml" value="0.11510416666666666" />
+        <entry key="..\:/Users/janaa/Desktop/mosis pokusaj/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_custom_grid_find_friends.xml" value="0.1" />
+        <entry key="..\:/Users/janaa/Desktop/mosis pokusaj/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_find_friends.xml" value="0.2" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.184" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/btn_bg.xml" value="0.184" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/drawable/ic_launcher_background.xml" value="0.184" />
@@ -60,6 +63,10 @@
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_walks.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/layout/nav_header.xml" value="0.253125" />
         <entry key="..\:/Users/janaa/Desktop/mosis projekat/MOSIS-Projekat/iWALK/app/src/main/res/menu/drawer_menu.xml" value="0.253125" />
+        <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_all_friends.xml" value="0.24547101449275363" />
+        <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_find_friends.xml" value="0.24547101449275363" />
+        <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_requests_friends.xml" value="0.24547101449275363" />
+        <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_find_friends.xml" value="0.24547101449275363" />
       </map>
     </option>
   </component>
