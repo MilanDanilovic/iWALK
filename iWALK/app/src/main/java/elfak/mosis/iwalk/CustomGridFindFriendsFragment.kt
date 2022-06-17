@@ -266,15 +266,15 @@ class CustomGridFindFriendsFragment : Fragment() {
                                         if (task.isSuccessful) {
                                             addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_friends))
                                             usersSenderRef.get()
-                                                .addOnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        for (document in task.result) {
-                                                            if (document["username"] == username.text.toString()) {
+                                                .addOnCompleteListener { taskDel ->
+                                                    if (taskDel.isSuccessful) {
+                                                        for (documentDel in taskDel.result) {
+                                                            if (documentDel["username"] == username.text.toString()) {
                                                                 friendRequests.get()
                                                                     .addOnCompleteListener { task ->
                                                                         if (task.isSuccessful) {
                                                                             for (documentRequest in task.result) {
-                                                                                if (documentRequest.getString("sender") == username.text.toString() && documentRequest.getString("receiver") == auth.currentUser!!.uid) {
+                                                                                if (documentRequest.getString("sender") == userId && documentRequest.getString("receiver") == auth.currentUser!!.uid) {
                                                                                     db.collection("friendRequests")
                                                                                         .document(documentRequest.id)
                                                                                         .delete()
