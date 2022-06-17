@@ -30,6 +30,7 @@ class CustomGridFindFriendsFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
     private var requestAlreadySent: String = ""
+    private var check: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,28 @@ class CustomGridFindFriendsFragment : Fragment() {
             userId = bundle.getString("user_id")!!
         }
 
+        usersReceiverRef.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document.id == auth.currentUser!!.uid) {
+                            var friends = arrayListOf<String>()
+                            if (document["friends"] != null) {
+                                friends = document["friends"] as ArrayList<String>
+                                for (friend in friends) {
+                                    if (friend.equals(userId)) {
+                                        addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_friends)) //VEC SMO PRIJATELJI
+                                        check = "true"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.exception)
+                }
+            }
+
         friendRequests.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -75,31 +98,20 @@ class CustomGridFindFriendsFragment : Fragment() {
                             requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
                         }
                     }
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.exception)
-                }
-            }
-
-        usersReceiverRef.get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        if (document.id == auth.currentUser!!.uid) {
-                            var friends = arrayListOf<String>()
-                            if (document["friends"] != null) {
-                                friends = document["friends"] as ArrayList<String>
-                                for (friend in friends) {
-                                    if (friend.equals(userId)) {
-                                        addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_friends)) //VEC SMO PRIJATELJI
-                                    }
-                                }
-                            }
-                        }
+                    if (check == "") {
+                        addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
+                        requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
                     }
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.exception)
                 }
             }
+            .addOnFailureListener{
+                addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
+                requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
+            }
+
+
 
         addFriend.setOnClickListener(View.OnClickListener {
             if (requestAlreadySent == "true") {
@@ -319,7 +331,7 @@ class CustomGridFindFriendsFragment : Fragment() {
                                                             }
                                                         }
                                                     } else {
-                                                        Log.d("TAG", "Error getting documents: ", task.exception)
+                                                        Log.d("TAG", "Error getting documents: ", taskDel.exception)
                                                     }
                                                 }
                                             Toast.makeText(
