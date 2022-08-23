@@ -36,8 +36,6 @@
             android:name=".RegisterActivity"/>
         <activity
             android:name=".HomeActivity"/>
-        <activity
-            android:name=".map.MapsActivity"/>
     </application>
 
 

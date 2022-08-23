@@ -18,7 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import elfak.mosis.iwalk.map.MapsActivity
+import elfak.mosis.iwalk.map.MapFragment
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,8 +73,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         mapPin.setOnClickListener{
-            val intent = Intent(this, MapsActivity::class.java)
-            startActivity(intent)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MapFragment()).commit()
         }
 
     }
