@@ -18,13 +18,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.squareup.picasso.Picasso
+import elfak.mosis.iwalk.map.MapsActivity
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawer : DrawerLayout
     private lateinit var addPost : ImageView
     private lateinit var notifications : ImageView
+    private lateinit var mapPin : ImageView
     private val db = FirebaseFirestore.getInstance()
     private val docRef = FirebaseFirestore.getInstance()
 
@@ -35,6 +36,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer = findViewById(R.id.drawer_layout);
         addPost = findViewById(R.id.addposts)
         notifications = findViewById(R.id.notifications)
+        mapPin = findViewById(R.id.map)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -68,6 +70,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         notifications.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, NotifiactionsFragment()).commit()
+        }
+
+        mapPin.setOnClickListener{
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent)
         }
 
     }

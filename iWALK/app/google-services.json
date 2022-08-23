@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1040100351712",
-    "project_id": "iwalk-4967b",
-    "storage_bucket": "iwalk-4967b.appspot.com"
+    "project_number": "521219401734",
+    "project_id": "iwalk-dogs",
+    "storage_bucket": "iwalk-dogs.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1040100351712:android:2b6a82472f86bad4f3fa85",
+        "mobilesdk_app_id": "1:521219401734:android:7ad843c54d536a96c7bb87",
         "android_client_info": {
           "package_name": "elfak.mosis.iwalk"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1040100351712-nvuvcp95nug8gh2509lojdh8lmkpbp9s.apps.googleusercontent.com",
+          "client_id": "521219401734-hmpp9bub54rqlf23b10k65rdbms555lf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCPYVRpV0Qn06nes4IH0wIKKh6BE_gUJNk"
+          "current_key": "AIzaSyD5xitVSARAhYHi8L5TS4-7VajPVd9NuSg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1040100351712-nvuvcp95nug8gh2509lojdh8lmkpbp9s.apps.googleusercontent.com",
+              "client_id": "521219401734-hmpp9bub54rqlf23b10k65rdbms555lf.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
