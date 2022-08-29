@@ -2,13 +2,20 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import elfak.mosis.iwalk.R
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.*
@@ -16,12 +23,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import elfak.mosis.iwalk.CustomGridFindFriendsFragment
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+    private var markers: MutableList<Marker> = mutableListOf()
 
     private var isCameraInitiallySet: Boolean = false
     private lateinit var map: GoogleMap
@@ -119,8 +130,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -129,13 +138,60 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         binding.mapView.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        Snackbar.make(requireView(), "Long press to add a marker", Snackbar.LENGTH_SHORT)
+            .setAction("OK", {})
+            .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white))
+            .show()
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
+        val mMap = googleMap
+
+        mMap.setOnInfoWindowClickListener { markerToDelete ->
+            Log.i("TAG", "onWindowClickListener - delete marker")
+            markers.remove(markerToDelete)
+            markerToDelete.remove()
+        }
+
+        mMap.setOnMapLongClickListener { latlng ->
+            Log.i("TAG", "onMapLongClickListener")
+            showAlertDialog(latlng)
+        }
         googleMap?.let {
             map = it
             getLocationAccess()
         }
+    }
+
+    private fun showAlertDialog(latlng: LatLng) {
+        val placeFormView = LayoutInflater.from(context).inflate(R.layout.dialog_create_place, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Add post")
+            .setView(placeFormView)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Ok", null)
+            .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
+            val title = placeFormView.findViewById<EditText>(R.id.etTitle).text.toString()
+            val description = placeFormView.findViewById<EditText>(R.id.etDescription).text.toString()
+
+            if (title.trim().isEmpty() || description.trim().isEmpty()) {
+                Toast.makeText(
+                    context,
+                    "Fields must not be empty! ",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            val marker = map.addMarker(MarkerOptions().position(latlng).title(title).snippet(description))
+            markers.add(marker!!)
+            dialog.dismiss()
+        }
+
     }
 
     override fun onCreateView(
@@ -152,5 +208,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }
