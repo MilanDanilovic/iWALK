@@ -2,11 +2,13 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import elfak.mosis.iwalk.R
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,14 +28,35 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import elfak.mosis.iwalk.CustomGridFindFriendsFragment
+import elfak.mosis.iwalk.CustomGridFindFriendsFragmentimport com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import elfak.mosis.iwalk.AdapterMyPosts
+import elfak.mosis.iwalk.HomeActivity
+import elfak.mosis.iwalk.Post
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
+    data class UserFromDatabase(
+        val email: String? = null,
+        val latitude: Number? = null,
+        val longitude: Number? = null,
+        val name: String? = null,
+        val numberOfWalks: String? = null,
+        val phone: String? = null,
+        val profileImageUrl:String? = null,
+        val score:String? = null,
+        val surname:String? = null,
+        val username:String? = null
+    )
+    var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
+
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
-    private var markers: MutableList<Marker> = mutableListOf()
+    private var auth: FirebaseAuth =  Firebase.auth
+	private var markers: MutableList<Marker> = mutableListOf()
 
     private var isCameraInitiallySet: Boolean = false
     private lateinit var map: GoogleMap
@@ -41,8 +65,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
+    private val docRef = FirebaseFirestore.getInstance()
+
+
     private var currentUserMarker: Marker? = null
-    private val listOfOtherUsersMarkers = ArrayList<Marker>()
+    private var listOfOtherUsersMarkers = ArrayList<Marker>()
 
     @SuppressLint("MissingPermission")
     private fun getLocationAccess(){
@@ -67,6 +94,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     val lastLocation = locationResult.lastLocation
                     if(lastLocation != null){
                         val latLng = LatLng(lastLocation.latitude,lastLocation.longitude)
+
+                        updateCurrentUserLocation(latLng)
 
                         val bearing = lastLocation.bearing
                         if(!isCameraInitiallySet) { //TODO Check if we want to have camera fixed to our marker
@@ -96,9 +125,22 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-//                        val markerOptions = MarkerOptions().position(latLng)
-//                        map.addMarker(markerOptions)
-//                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
+                        for(marker in listOfOtherUsersMarkers){
+                            marker.remove()
+                        }
+
+                        getAllUsersFromDatabase()
+
+
+                        for(user in listOfOtherUsers){
+                            val userLatLng = LatLng(user.latitude as Double, user.longitude as Double)
+                            val markerOptions = MarkerOptions().position(userLatLng)
+                            val userMarker = map.addMarker(markerOptions)
+                            if (userMarker != null) {
+                                    listOfOtherUsersMarkers.add(userMarker)
+                            }
+                        }
+
                     }
                 }
             }
@@ -129,6 +171,59 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
+
+
+    private fun getAllUsersFromDatabase() {
+        val documentReference = docRef.collection("users")
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document.id != auth.currentUser?.uid) {
+                            val userFromDatabase = UserFromDatabase(
+                                document.getString("email"),
+                                document.get("latitude") as Number?,
+                                document.get("longitude") as Number?,
+                                document.getString("name"),
+                                document.getString("numberOfWalks"),
+                                document.getString("phone"),
+                                document.getString("profileImageUrl"),
+                                document.getString("score"),
+                                document.getString("surname"),
+                                document.getString("username")
+                            )
+                            listOfOtherUsers.add(userFromDatabase)
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun updateCurrentUserLocation(latLng: LatLng){
+
+        val documentReference = docRef.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser!!.uid)
+
+        val dataToSave: MutableMap<String, Any> =
+            HashMap()
+
+        dataToSave["latitude"] = latLng.latitude
+        dataToSave["longitude"] = latLng.longitude
+
+
+        documentReference.update(dataToSave)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                } else {
+                    Toast.makeText(
+                        this@MapFragment.context,
+                        "Error while updating data!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }.addOnFailureListener { }
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
