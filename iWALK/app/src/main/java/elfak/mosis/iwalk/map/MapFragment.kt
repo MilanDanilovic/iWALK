@@ -2,9 +2,12 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import elfak.mosis.iwalk.HomeActivity
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -29,6 +35,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+
+    private val docRef = FirebaseFirestore.getInstance()
+
 
     private var currentUserMarker: Marker? = null
     private val listOfOtherUsersMarkers = ArrayList<Marker>()
@@ -56,6 +65,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     val lastLocation = locationResult.lastLocation
                     if(lastLocation != null){
                         val latLng = LatLng(lastLocation.latitude,lastLocation.longitude)
+
+                        updateCurrentUserLocation(latLng)
 
                         val bearing = lastLocation.bearing
                         if(!isCameraInitiallySet) { //TODO Check if we want to have camera fixed to our marker
@@ -85,9 +96,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-//                        val markerOptions = MarkerOptions().position(latLng)
-//                        map.addMarker(markerOptions)
-//                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
                     }
                 }
             }
@@ -119,6 +127,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun updateCurrentUserLocation(latLng: LatLng){
+
+        val documentReference = docRef.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser!!.uid)
+
+        val dataToSave: MutableMap<String, Any> =
+            HashMap()
+
+        dataToSave["latitude"] = latLng.latitude
+        dataToSave["longitude"] = latLng.longitude
+
+
+        documentReference.update(dataToSave)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                } else {
+                    Toast.makeText(
+                        this@MapFragment.context,
+                        "Error while updating data!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }.addOnFailureListener { }
+    }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
