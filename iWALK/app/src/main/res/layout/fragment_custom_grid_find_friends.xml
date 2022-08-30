@@ -42,8 +42,8 @@
             android:id="@+id/find_friends_add_friend"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="33dp"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toEndOf="@+id/find_friends_username_value"
             app:layout_constraintTop_toTopOf="parent"/>
         // app:srcCompat="@drawable/ic_add_post" />
