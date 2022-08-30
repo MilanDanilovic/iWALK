@@ -4,20 +4,21 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.*
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import elfak.mosis.iwalk.R
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,9 +31,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import elfak.mosis.iwalk.AdapterMyPets
-import elfak.mosis.iwalk.Pet
+import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
+import java.io.InputStream
+import java.net.URL
+import java.net.URLConnection
+import java.util.*
+
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -66,7 +71,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
 
     private var currentUserMarker: Marker? = null
-    private var listOfOtherUsersMarkers = ArrayList<Marker>()
+    private var listOfOtherUsersMarkers:MutableList<Marker> =  mutableListOf<Marker>()
 
     @SuppressLint("MissingPermission")
     private fun getLocationAccess(){
@@ -122,26 +127,86 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-                        for(marker in listOfOtherUsersMarkers){
-                            marker.remove()
-                        }
-
                         getAllUsersFromDatabase()
 
+                        for(marker in listOfOtherUsersMarkers){
+                            marker.remove()
+                            listOfOtherUsersMarkers.remove(marker)
+                        }
 
                         for(user in listOfOtherUsers){
-                            val userLatLng = LatLng(user.latitude as Double, user.longitude as Double)
-                            val markerOptions = MarkerOptions().position(userLatLng)
-                            val userMarker = map.addMarker(markerOptions)
-                            if (userMarker != null) {
-                                    listOfOtherUsersMarkers.add(userMarker)
+                            val markerOptions:MarkerOptions
+                            val userLatLng =
+                                LatLng(user.latitude as Double, user.longitude as Double)
+                            val urlToUserProfileImage = user.profileImageUrl
+                            val userMarker:Marker
+
+
+                            if( URLUtil.isValidUrl(urlToUserProfileImage)) {
+                                val imageURL = URL(urlToUserProfileImage)
+                                val connection: URLConnection = imageURL.openConnection()
+                                val iconStream: InputStream = connection.getInputStream()
+                                val bmp = BitmapFactory.decodeStream(iconStream)
+                                val resizedBitmap = getResizedBitmap(bmp, 160)
+                                val croppedBitmap = getCroppedBitmap(resizedBitmap)
+
+                                markerOptions = MarkerOptions().position(userLatLng)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
+                                    .flat(true)
+                                    .anchor(0.5f,0.5f)
+                                userMarker = map.addMarker(markerOptions)!!
+                                listOfOtherUsersMarkers.add(userMarker)
+
+                            } else{
+                                markerOptions= MarkerOptions().position(userLatLng)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
+                                    .flat(true)
+                                    .anchor(0.5f,0.5f)
+                                userMarker = map.addMarker(markerOptions)!!
+                                listOfOtherUsersMarkers.add(userMarker)
                             }
+
                         }
 
                     }
                 }
             }
         }
+    }
+
+    private fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
+        var width = image.width
+        var height = image.height
+        val bitmapRatio = width.toFloat() / height.toFloat()
+        if (bitmapRatio > 1) {
+            width = maxSize
+            height = (width / bitmapRatio).toInt()
+        } else {
+            height = maxSize
+            width = (height * bitmapRatio).toInt()
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true)
+    }
+
+    private fun getCroppedBitmap(bitmap: Bitmap): Bitmap {
+        val output = Bitmap.createBitmap(
+            bitmap.width,
+            bitmap.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(output)
+        val color = -0xbdbdbe
+        val paint = Paint()
+        val rect = Rect(0, 0, bitmap.width, bitmap.height)
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        canvas.drawCircle(
+            (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(),
+            (bitmap.width / 2).toFloat(), paint
+        )
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+        return output
     }
 
     @SuppressLint("MissingPermission")
@@ -175,6 +240,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         documentReference.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    listOfOtherUsers.removeAll(listOfOtherUsers)
                     for (document in task.result) {
                         if (document.id != auth.currentUser?.uid) {
                             val userFromDatabase = UserFromDatabase(
@@ -224,6 +290,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        //todo not great solution :)
+        val policy = ThreadPolicy.Builder()
+            .permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.onResume()
@@ -292,7 +363,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             Log.i("TAG", "onMapLongClickListener")
             showAlertDialog(latlng)
         }
-        googleMap?.let {
+        googleMap.let {
             map = it
             getLocationAccess()
         }
