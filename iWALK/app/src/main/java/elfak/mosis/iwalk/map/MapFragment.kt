@@ -103,7 +103,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if(locationResult.locations.isNotEmpty()){
                     val lastLocation = locationResult.lastLocation
                     if(lastLocation != null){
-                        val customInfoWindowAdapter = CustomInfoWindowAdapter(requireContext())
+                        val customInfoWindowAdapter = context?.let { CustomInfoWindowAdapter(it) }
                         map.setInfoWindowAdapter(customInfoWindowAdapter)
                         val latLng = LatLng(lastLocation.latitude,lastLocation.longitude)
 
