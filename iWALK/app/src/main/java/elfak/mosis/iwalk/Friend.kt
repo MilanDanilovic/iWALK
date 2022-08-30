@@ -4,6 +4,7 @@ class Friend {
     private var friendId: String? = null
     private var friendUsername: String? = null
     private var friendImage: String? = null
+    private var friendSenderId: String? = null
 
     constructor(
         friendId: String?,
@@ -13,6 +14,18 @@ class Friend {
         this.friendId = friendId
         this.friendUsername = friendUsername
         this.friendImage = friendImage
+    }
+
+    constructor(
+        friendId: String?,
+        friendUsername: String?,
+        friendImage: String?,
+        friendSenderId: String?
+    ) {
+        this.friendId = friendId
+        this.friendUsername = friendUsername
+        this.friendImage = friendImage
+        this.friendSenderId = friendSenderId
     }
 
     fun getFriendId(): String? {
@@ -37,5 +50,13 @@ class Friend {
 
     fun setFriendImage(friendImage: String?) {
         this.friendImage = friendImage
+    }
+
+    fun getFriendSenderId(): String? {
+        return friendSenderId
+    }
+
+    fun setFriendSenderId(friendSenderId: String?) {
+        this.friendSenderId = friendSenderId
     }
 }

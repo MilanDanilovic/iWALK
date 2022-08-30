@@ -50,7 +50,8 @@ class RequestsFriendsFragment : Fragment() {
                             friend = Friend(
                                 document.id,
                                 document.getString("senderUsername"),
-                                document.getString("senderImage")
+                                document.getString("senderImage"),
+                                document.getString("sender")
                             )
                             friendRequestsList!!.add(friend!!)
                             adapterFriendRequest = context?.let { AdapterFriendRequest(it, friendRequestsList!!) }
