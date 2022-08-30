@@ -61,6 +61,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var auth: FirebaseAuth =  Firebase.auth
 	private var markers: MutableList<Marker> = mutableListOf()
     private lateinit var mapOptions : ImageView
+    private val arrayChecked = booleanArrayOf(true,false)
+    private val mapOptionsArray = arrayOf("Show users","Filter")
+    private var arrayCheckedFilterDialog = booleanArrayOf(false,false)
+    private val mapOptionsArrayFilterDialog = arrayOf("Score","Distance")
+    private var showUsersFlag = true
 
 
     private var isCameraInitiallySet: Boolean = false
@@ -137,38 +142,40 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             listOfOtherUsersMarkers.remove(marker)
                         }
 
-                        for(user in listOfOtherUsers){
-                            val markerOptions:MarkerOptions
-                            val userLatLng =
-                                LatLng(user.latitude as Double, user.longitude as Double)
-                            val urlToUserProfileImage = user.profileImageUrl
-                            val userMarker:Marker
+                        for(user in listOfOtherUsers) {
+                            if (user.latitude != null && user.longitude != null && showUsersFlag) {
+                                val markerOptions: MarkerOptions
+                                val userLatLng =
+                                    LatLng(user.latitude as Double, user.longitude as Double)
+                                val urlToUserProfileImage = user.profileImageUrl
+                                val userMarker: Marker
 
 
-                            if( URLUtil.isValidUrl(urlToUserProfileImage)) {
-                                val imageURL = URL(urlToUserProfileImage)
-                                val connection: URLConnection = imageURL.openConnection()
-                                val iconStream: InputStream = connection.getInputStream()
-                                val bmp = BitmapFactory.decodeStream(iconStream)
-                                val resizedBitmap = getResizedBitmap(bmp, 160)
-                                val croppedBitmap = getCroppedBitmap(resizedBitmap)
+                                if (URLUtil.isValidUrl(urlToUserProfileImage)) {
+                                    val imageURL = URL(urlToUserProfileImage)
+                                    val connection: URLConnection = imageURL.openConnection()
+                                    val iconStream: InputStream = connection.getInputStream()
+                                    val bmp = BitmapFactory.decodeStream(iconStream)
+                                    val resizedBitmap = getResizedBitmap(bmp, 160)
+                                    val croppedBitmap = getCroppedBitmap(resizedBitmap)
 
-                                markerOptions = MarkerOptions().position(userLatLng)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
-                                    .flat(true)
-                                    .anchor(0.5f,0.5f)
-                                userMarker = map.addMarker(markerOptions)!!
-                                listOfOtherUsersMarkers.add(userMarker)
+                                    markerOptions = MarkerOptions().position(userLatLng)
+                                        .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
+                                        .flat(true)
+                                        .anchor(0.5f, 0.5f)
+                                    userMarker = map.addMarker(markerOptions)!!
+                                    listOfOtherUsersMarkers.add(userMarker)
 
-                            } else{
-                                markerOptions= MarkerOptions().position(userLatLng)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
-                                    .flat(true)
-                                    .anchor(0.5f,0.5f)
-                                userMarker = map.addMarker(markerOptions)!!
-                                listOfOtherUsersMarkers.add(userMarker)
+                                } else {
+                                    markerOptions = MarkerOptions().position(userLatLng)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
+                                        .flat(true)
+                                        .anchor(0.5f, 0.5f)
+                                    userMarker = map.addMarker(markerOptions)!!
+                                    listOfOtherUsersMarkers.add(userMarker)
+                                }
+
                             }
-
                         }
 
                     }
@@ -312,6 +319,80 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .setAction("OK", {})
             .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white))
             .show()
+
+        //START of part of code is for mapOptions button of main toolbar
+        mapOptions.setOnClickListener{
+
+            lateinit var dialog:AlertDialog
+            lateinit var dialogFilter: AlertDialog
+
+            val builder = AlertDialog.Builder(requireContext())
+            val builderFilter = AlertDialog.Builder(requireContext())
+
+            builder.setTitle("Map options")
+                //.setCancelable(false)
+            builder.setMultiChoiceItems(mapOptionsArray,arrayChecked) { dialog, which, isChecked ->
+                arrayChecked[which] = isChecked
+                val valueChecked = mapOptionsArray[which]
+            }
+
+            builder.setPositiveButton("OK") { _, _ ->
+                // Do something when click positive button
+                for (i in mapOptionsArray.indices) {
+                    val checked = arrayChecked[i]
+                    val showUsersString = "Show users"
+                    if (checked) {
+                        if(mapOptionsArray[i] == showUsersString){
+                            showUsersFlag = true
+                        }else{
+                            dialogFilter.show()
+                        }
+                    }else{
+                        if(mapOptionsArray[i] == showUsersString){
+                            showUsersFlag = false
+                        }else{
+                            for(index in arrayCheckedFilterDialog.indices){
+                                arrayCheckedFilterDialog[index] = false
+                            }
+                        }
+                    }
+                }
+            }
+
+            builderFilter.setTitle("Filter users")
+            builderFilter.setMultiChoiceItems(mapOptionsArrayFilterDialog,arrayCheckedFilterDialog) { dialogFilter, which, isChecked ->
+                arrayCheckedFilterDialog[which] = isChecked
+                val valueChecked = mapOptionsArrayFilterDialog[which]
+            }
+
+            builderFilter.setPositiveButton("OK") { _, _ ->
+                // Do something when click positive button
+                for (i in mapOptionsArrayFilterDialog.indices) {
+                    val checked = arrayCheckedFilterDialog[i]
+                    val scoreString = "Score"
+                    if (checked) {
+                        if(mapOptionsArrayFilterDialog[i] == scoreString){
+                            Toast.makeText(requireContext(), "Score", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(requireContext(), "Distance", Toast.LENGTH_SHORT).show()
+                        }
+                    }else{
+                        if(mapOptionsArrayFilterDialog[i] == scoreString){
+                            Toast.makeText(requireContext(), "Remove score", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(requireContext(), "Remove distance", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            dialogFilter = builderFilter.create()
+
+            dialog = builder.create()
+            dialog.show()
+
+        }
+        //END of mapOptionsPart
 
     }
 
