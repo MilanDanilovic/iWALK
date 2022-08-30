@@ -3,7 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/acitivity_home.xml" value="0.12917933130699089" />
+        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/acitivity_home.xml" value="0.536" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_main.xml" value="0.265625" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_maps.xml" value="0.1082427536231884" />
@@ -76,7 +76,6 @@
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_all_friends.xml" value="0.24547101449275363" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_find_friends.xml" value="0.24547101449275363" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_requests_friends.xml" value="0.24547101449275363" />
-        <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_all_friends.xml" value="0.228125" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_custom_grid_find_friends.xml" value="0.18541666666666667" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_custom_grid_sent_request.xml" value="0.17135416666666667" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_find_friends.xml" value="0.24547101449275363" />

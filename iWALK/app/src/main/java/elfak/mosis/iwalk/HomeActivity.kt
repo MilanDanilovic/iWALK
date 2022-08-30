@@ -2,9 +2,11 @@ package elfak.mosis.iwalk
 
 import android.content.Context
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -26,6 +28,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var addPost : ImageView
     private lateinit var notifications : ImageView
     private lateinit var mapPin : ImageView
+    private lateinit var mapOptions : ImageView
+
     private val db = FirebaseFirestore.getInstance()
     private val docRef = FirebaseFirestore.getInstance()
 
@@ -37,6 +41,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         addPost = findViewById(R.id.addposts)
         notifications = findViewById(R.id.notifications)
         mapPin = findViewById(R.id.map)
+        mapOptions = findViewById(R.id.map_options)
+        mapOptions.visibility = View.GONE
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

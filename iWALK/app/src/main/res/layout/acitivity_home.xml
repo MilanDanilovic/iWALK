@@ -24,6 +24,13 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <ImageView
+                android:id="@+id/map_options"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"
+                app:srcCompat="@drawable/ic_map_options"/>
+            <ImageView
                 android:id="@+id/map"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
