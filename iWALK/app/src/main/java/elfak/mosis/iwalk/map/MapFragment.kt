@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import elfak.mosis.iwalk.R
@@ -326,15 +327,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         for (document in task.result) {
-                            if (document.getString("userId") == auth.currentUser?.uid && document.getString("latitude") == markerToDelete.position.latitude.toString() && document.getString("longitude") == markerToDelete.position.longitude.toString()) {
-                                docRef.collection("markers")
-                                    .document()
+                            if (document["userId"] == auth.currentUser?.uid && document["latitude"] == markerToDelete.position.latitude && document["longitude"] == markerToDelete.position.longitude) {
+                                val markersRefDelete: DocumentReference = docRef.collection("markers").document(document.id.toString())
+                                markersRefDelete
                                     .delete()
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
-                                            docRef.collection("markers").document(
-                                                document.id
-                                            )
+                                            docRef.collection("markers").document(document.id)
                                                 .delete()
                                                 .addOnSuccessListener {
                                                     Log.d(
@@ -349,8 +348,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                                         e
                                                     )
                                                 }
-                                            //markers.remove(markerToDelete)
-                                            //markerToDelete.remove()
+                                            markers.remove(markerToDelete)
+                                            markerToDelete.remove()
                                         } else {
                                             Log.w(
                                                 "TAG",
