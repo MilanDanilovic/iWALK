@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -59,6 +60,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val binding get() = _binding!!
     private var auth: FirebaseAuth =  Firebase.auth
 	private var markers: MutableList<Marker> = mutableListOf()
+    private lateinit var mapOptions : ImageView
+
 
     private var isCameraInitiallySet: Boolean = false
     private lateinit var map: GoogleMap
@@ -296,6 +299,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
+        mapOptions = requireActivity().findViewById(R.id.map_options)
+        mapOptions.visibility = View.VISIBLE
+
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.onResume()
 
@@ -433,6 +439,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onDestroyView() {
+        mapOptions.visibility = View.GONE
         super.onDestroyView()
         _binding = null
     }
