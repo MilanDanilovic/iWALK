@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import elfak.mosis.iwalk.map.MapFragment
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -31,7 +34,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mapOptions : ImageView
 
     private val db = FirebaseFirestore.getInstance()
-    private val docRef = FirebaseFirestore.getInstance()
+    private var auth: FirebaseAuth =  Firebase.auth
+
+    private lateinit var profileImageSideBar : CircleImageView
+    private lateinit var usernameSideBar : TextView
+    private lateinit var emailSideBar : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +90,30 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, MapFragment()).commit()
         }
 
+        val headerView = navigationView.getHeaderView(0)
+        usernameSideBar = headerView.findViewById<TextView>(R.id.usrnameNav)
+        emailSideBar = headerView.findViewById<TextView>(R.id.emailNav)
+        profileImageSideBar = headerView.findViewById<CircleImageView>(R.id.profilePicture)
+
+        val usersReference = db.collection("users").document(auth.currentUser?.uid!!)
+        usersReference.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (document.exists()) {
+                    usernameSideBar.setText(document["username"].toString())
+                    emailSideBar.setText(document["email"].toString())
+                    if (document["profileImageUrl"].toString() != "default") Picasso.get().load(
+                        document["profileImageUrl"].toString()
+                    ).into(profileImageSideBar)
+                    Log.d("TAG:", "DocumentSnapshot data: " + document.data)
+                } else {
+                    Log.d("TAG:", "No such document")
+                }
+            } else {
+                Log.d("TAG", "get failed with ", task.exception)
+            }
+        }
+
     }
 
     override fun onBackPressed() {
@@ -131,7 +162,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         if (document["userId"] == FirebaseAuth.getInstance().currentUser!!.uid) {
                             tokenId = document.id
 
-                            docRef.collection("tokens").document(tokenId!!)
+                            db.collection("tokens").document(tokenId!!)
                                 .delete()
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {

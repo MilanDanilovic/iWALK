@@ -25,7 +25,6 @@ class CustomGridFindFriendsFragment : Fragment() {
     private lateinit var username : TextView
     private lateinit var image : CircleImageView
     private lateinit var addFriend : ImageView
-    private lateinit var addFriendBluetooth : ImageView
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
@@ -42,7 +41,6 @@ class CustomGridFindFriendsFragment : Fragment() {
         username = requireView().findViewById<TextView>(R.id.find_friends_username_value)
         image = requireView().findViewById<CircleImageView>(R.id.find_friends_profile_picture)
         addFriend = requireView().findViewById<ImageView>(R.id.find_friends_add_friend)
-        addFriendBluetooth = requireView().findViewById<ImageView>(R.id.find_friends_add_friend_bluetooth)
         val usersSenderRef: CollectionReference = db.collection("users")
         val usersReceiverRef: CollectionReference = db.collection("users")
         val friendRequests: CollectionReference = db.collection("friendRequests")
@@ -93,10 +91,10 @@ class CustomGridFindFriendsFragment : Fragment() {
                             requestAlreadySent = "sentMe" //POSLAT MENI ZAHTEV
                             break
                         }
-                        else {
+                        /*else {
                             addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
                             requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
-                        }
+                        }*/
                     }
                     if (check == "") {
                         addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
@@ -106,7 +104,8 @@ class CustomGridFindFriendsFragment : Fragment() {
                     Log.d("TAG", "Error getting documents: ", task.exception)
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener{ e->
+                Log.d("TAG", "Errorrrrrrrr: ", e)
                 addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
                 requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
             }
