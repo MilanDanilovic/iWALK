@@ -1,6 +1,7 @@
 package elfak.mosis.iwalk
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class NewPostsFragment : Fragment() {
+
+    var adapterNewPosts: AdapterNewPosts? = null
+    private val docRef = FirebaseFirestore.getInstance()
+    private lateinit var auth: FirebaseAuth
+    var recyclerView: RecyclerView? = null
+    var post: Post? = null
+    var postsList: ArrayList<Post>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +34,37 @@ class NewPostsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val myPosts: TextView = requireView().findViewById<TextView>(R.id.my_posts_tab_new_posts)
+
+        postsList = ArrayList<Post>()
+        auth = Firebase.auth
+        val postsRef: CollectionReference = docRef.collection("posts")
+        recyclerView = view.findViewById<View>(R.id.new_posts_recycler) as RecyclerView
+        postsRef.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document.getString("userId") != auth.currentUser?.uid) {
+                            val gridLayoutManager = GridLayoutManager(context, 1)
+                            recyclerView!!.setLayoutManager(gridLayoutManager)
+                            post = Post(
+                                document.id,
+                                document.getString("description"),
+                                document.getString("date"),
+                                document.getString("time"),
+                                document.getString("userId"),
+                                document.getString("dogImage1Url"),
+                                document.getString("dogImage2Url")
+                            )
+                            postsList!!.add(post!!)
+                            adapterNewPosts = context?.let { AdapterNewPosts(it, postsList!!) }
+                            recyclerView!!.setAdapter(adapterNewPosts)
+                        }
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.exception)
+                }
+            }
+
         myPosts.setOnClickListener(View.OnClickListener {
             val fragment: Fragment = PostsFragment()
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager

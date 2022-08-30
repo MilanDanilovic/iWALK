@@ -71,16 +71,15 @@
 
             <ImageView
                 android:id="@+id/my_posts_dog1_pictue_value"
-                android:layout_width="115dp"
-                android:layout_height="120dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_littledog2"/>
 
             <ImageView
                 android:id="@+id/my_posts_dog2_picture_value"
-                android:layout_width="115dp"
-                android:layout_height="120dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_littledog2"/>
@@ -89,8 +88,7 @@
                 android:id="@+id/my_posts_delete"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="80dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginStart="100dp"
                 app:srcCompat="@drawable/ic_delete_post" />
         </LinearLayout>
 
