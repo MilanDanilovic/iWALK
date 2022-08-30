@@ -2,11 +2,8 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -16,25 +13,24 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import elfak.mosis.iwalk.R
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import elfak.mosis.iwalk.CustomGridFindFriendsFragmentimport com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import elfak.mosis.iwalk.AdapterMyPosts
-import elfak.mosis.iwalk.HomeActivity
-import elfak.mosis.iwalk.Post
+import elfak.mosis.iwalk.AdapterMyPets
+import elfak.mosis.iwalk.Pet
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -247,8 +243,50 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         mMap.setOnInfoWindowClickListener { markerToDelete ->
             Log.i("TAG", "onWindowClickListener - delete marker")
-            markers.remove(markerToDelete)
-            markerToDelete.remove()
+
+            val markersRef: CollectionReference = docRef.collection("markers")
+            markersRef.get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            if (document.getString("userId") == auth.currentUser?.uid && document.getString("latitude") == markerToDelete.position.latitude.toString() && document.getString("longitude") == markerToDelete.position.longitude.toString()) {
+                                docRef.collection("markers")
+                                    .document()
+                                    .delete()
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            docRef.collection("markers").document(
+                                                document.id
+                                            )
+                                                .delete()
+                                                .addOnSuccessListener {
+                                                    Log.d(
+                                                        "TAG",
+                                                        "DocumentSnapshot successfully deleted!"
+                                                    )
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    Log.w(
+                                                        "TAG",
+                                                        "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA",
+                                                        e
+                                                    )
+                                                }
+                                            //markers.remove(markerToDelete)
+                                            //markerToDelete.remove()
+                                        } else {
+                                            Log.w(
+                                                "TAG",
+                                                "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                            )
+                                        }
+                                    }
+                            }
+                        }
+                    } else {
+                        Log.d("TAG", "Error getting marker documents: ", task.exception)
+                    }
+                }
         }
 
         mMap.setOnMapLongClickListener { latlng ->
@@ -282,9 +320,34 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 ).show()
                 return@setOnClickListener
             }
-            val marker = map.addMarker(MarkerOptions().position(latlng).title(title).snippet(description))
-            markers.add(marker!!)
-            dialog.dismiss()
+
+            val query = auth.currentUser?.uid
+            val dataToSave: MutableMap<String, Any> =
+                HashMap()
+
+            if(!TextUtils.isEmpty(title)) {
+                dataToSave["title"] = title
+            }
+            if(!TextUtils.isEmpty(description)) {
+                dataToSave["description"] = description
+            }
+
+            dataToSave["latitude"] = latlng.latitude
+            dataToSave["longitude"] = latlng.longitude
+
+            if (query != null) {
+                dataToSave["userId"] = query
+            }
+
+            docRef.collection("markers").add(dataToSave).addOnSuccessListener {
+                Log.d("TAG", "Marker is saved! ")
+                val marker = map.addMarker(MarkerOptions().position(latlng).title(title).snippet(description))
+                markers.add(marker!!)
+                dialog.dismiss()
+            }.addOnFailureListener { e ->
+                Log.w("TAG", "Marker is not saved in database! ", e)
+            }
+
         }
 
     }
