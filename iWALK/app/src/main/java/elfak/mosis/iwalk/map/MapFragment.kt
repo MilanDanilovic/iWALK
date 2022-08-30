@@ -103,6 +103,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if(locationResult.locations.isNotEmpty()){
                     val lastLocation = locationResult.lastLocation
                     if(lastLocation != null){
+                        val customInfoWindowAdapter = CustomInfoWindowAdapter(requireContext())
+                        map.setInfoWindowAdapter(customInfoWindowAdapter)
                         val latLng = LatLng(lastLocation.latitude,lastLocation.longitude)
 
                         updateCurrentUserLocation(latLng)
@@ -149,20 +151,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     LatLng(user.latitude as Double, user.longitude as Double)
                                 val urlToUserProfileImage = user.profileImageUrl
                                 val userMarker: Marker
-
+                                val userDescription = "Name and Surname: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
+                                        "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
 
                                 if (URLUtil.isValidUrl(urlToUserProfileImage)) {
                                     val imageURL = URL(urlToUserProfileImage)
                                     val connection: URLConnection = imageURL.openConnection()
                                     val iconStream: InputStream = connection.getInputStream()
                                     val bmp = BitmapFactory.decodeStream(iconStream)
-                                    val resizedBitmap = getResizedBitmap(bmp, 160)
+                                    val resizedBitmap = getResizedBitmap(bmp, 200)
                                     val croppedBitmap = getCroppedBitmap(resizedBitmap)
 
                                     markerOptions = MarkerOptions().position(userLatLng)
                                         .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
                                         .flat(true)
                                         .anchor(0.5f, 0.5f)
+                                        .title("Username: "+user.username)
+                                        .snippet(userDescription)
                                     userMarker = map.addMarker(markerOptions)!!
                                     listOfOtherUsersMarkers.add(userMarker)
 
@@ -171,6 +176,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
                                         .flat(true)
                                         .anchor(0.5f, 0.5f)
+                                        .title("Username: "+user.username)
+                                        .snippet(userDescription)
                                     userMarker = map.addMarker(markerOptions)!!
                                     listOfOtherUsersMarkers.add(userMarker)
                                 }
