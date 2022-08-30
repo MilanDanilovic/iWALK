@@ -358,6 +358,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+            builder.setNeutralButton("Cancel"){ _,_-> }
 
             builderFilter.setTitle("Filter users")
             builderFilter.setMultiChoiceItems(mapOptionsArrayFilterDialog,arrayCheckedFilterDialog) { dialogFilter, which, isChecked ->
@@ -385,6 +386,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+
+            builderFilter.setNeutralButton("Cancel"){ _,_-> }
 
             dialogFilter = builderFilter.create()
 
