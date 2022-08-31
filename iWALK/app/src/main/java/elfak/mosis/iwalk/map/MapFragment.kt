@@ -37,7 +37,7 @@ import elfak.mosis.iwalk.databinding.FragmentMapBinding
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
-import java.util.*
+import kotlin.math.*
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -66,7 +66,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var arrayCheckedFilterDialog = booleanArrayOf(false,false)
     private val mapOptionsArrayFilterDialog = arrayOf("Score","Distance")
     private var showUsersFlag = true
-
+    private var radius = 500.00
+    private var distanceFilter = false
+    private var scoreFilter = false
 
     private var isCameraInitiallySet: Boolean = false
     private lateinit var map: GoogleMap
@@ -153,34 +155,67 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                 val userMarker: Marker
                                 val userDescription = "Full name: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
                                         "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
+                                //START distance section
+                                if(!distanceFilter) {
+                                    if (URLUtil.isValidUrl(urlToUserProfileImage)) {
+                                        val imageURL = URL(urlToUserProfileImage)
+                                        val connection: URLConnection = imageURL.openConnection()
+                                        val iconStream: InputStream = connection.getInputStream()
+                                        val bmp = BitmapFactory.decodeStream(iconStream)
+                                        val resizedBitmap = getResizedBitmap(bmp, 200)
+                                        val croppedBitmap = getCroppedBitmap(resizedBitmap)
 
-                                if (URLUtil.isValidUrl(urlToUserProfileImage)) {
-                                    val imageURL = URL(urlToUserProfileImage)
-                                    val connection: URLConnection = imageURL.openConnection()
-                                    val iconStream: InputStream = connection.getInputStream()
-                                    val bmp = BitmapFactory.decodeStream(iconStream)
-                                    val resizedBitmap = getResizedBitmap(bmp, 200)
-                                    val croppedBitmap = getCroppedBitmap(resizedBitmap)
+                                        markerOptions = MarkerOptions().position(userLatLng)
+                                            .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
+                                            .flat(true)
+                                            .anchor(0.5f, 0.5f)
+                                            .title("Username: " + user.username)
+                                            .snippet(userDescription)
+                                        userMarker = map.addMarker(markerOptions)!!
+                                        listOfOtherUsersMarkers.add(userMarker)
 
-                                    markerOptions = MarkerOptions().position(userLatLng)
-                                        .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
-                                        .flat(true)
-                                        .anchor(0.5f, 0.5f)
-                                        .title("Username: "+user.username)
-                                        .snippet(userDescription)
-                                    userMarker = map.addMarker(markerOptions)!!
-                                    listOfOtherUsersMarkers.add(userMarker)
+                                    } else {
+                                        markerOptions = MarkerOptions().position(userLatLng)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
+                                            .flat(true)
+                                            .anchor(0.5f, 0.5f)
+                                            .title("Username: " + user.username)
+                                            .snippet(userDescription)
+                                        userMarker = map.addMarker(markerOptions)!!
+                                        listOfOtherUsersMarkers.add(userMarker)
+                                    }
+                                } else{
+                                    if(getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
+                                            ,userLatLng.latitude,userLatLng.longitude)<radius)
+                                    if (URLUtil.isValidUrl(urlToUserProfileImage)) {
+                                        val imageURL = URL(urlToUserProfileImage)
+                                        val connection: URLConnection = imageURL.openConnection()
+                                        val iconStream: InputStream = connection.getInputStream()
+                                        val bmp = BitmapFactory.decodeStream(iconStream)
+                                        val resizedBitmap = getResizedBitmap(bmp, 200)
+                                        val croppedBitmap = getCroppedBitmap(resizedBitmap)
 
-                                } else {
-                                    markerOptions = MarkerOptions().position(userLatLng)
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
-                                        .flat(true)
-                                        .anchor(0.5f, 0.5f)
-                                        .title("Username: "+user.username)
-                                        .snippet(userDescription)
-                                    userMarker = map.addMarker(markerOptions)!!
-                                    listOfOtherUsersMarkers.add(userMarker)
+                                        markerOptions = MarkerOptions().position(userLatLng)
+                                            .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
+                                            .flat(true)
+                                            .anchor(0.5f, 0.5f)
+                                            .title("Username: " + user.username)
+                                            .snippet(userDescription)
+                                        userMarker = map.addMarker(markerOptions)!!
+                                        listOfOtherUsersMarkers.add(userMarker)
+
+                                    } else {
+                                        markerOptions = MarkerOptions().position(userLatLng)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
+                                            .flat(true)
+                                            .anchor(0.5f, 0.5f)
+                                            .title("Username: " + user.username)
+                                            .snippet(userDescription)
+                                        userMarker = map.addMarker(markerOptions)!!
+                                        listOfOtherUsersMarkers.add(userMarker)
+                                    }
                                 }
+                                //END distance section
 
                             }
                         }
@@ -189,6 +224,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    fun getDistance(
+        LAT1: Double,
+        LONG1: Double,
+        LAT2: Double,
+        LONG2: Double
+    ): Double {
+        return 2 * 6371000 * asin(
+            sqrt(
+                sin((LAT2 * (3.14159 / 180) - LAT1 * (3.14159 / 180)) / 2).pow(2.0) + cos(LAT2 * (3.14159 / 180)) * cos(LAT1 * (3.14159 / 180)) * sin(
+                    ((LONG2 * (3.14159 / 180) - LONG1 * (3.14159 / 180)) / 2).pow(2.0)
+                )
+            )
+        )
     }
 
     private fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
@@ -360,6 +410,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         }else{
                             for(index in arrayCheckedFilterDialog.indices){
                                 arrayCheckedFilterDialog[index] = false
+                                scoreFilter = false
+                                distanceFilter = false
                             }
                         }
                     }
@@ -380,15 +432,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     val scoreString = "Score"
                     if (checked) {
                         if(mapOptionsArrayFilterDialog[i] == scoreString){
+                            scoreFilter = true
                             Toast.makeText(requireContext(), "Score", Toast.LENGTH_SHORT).show()
                         }else{
-                            Toast.makeText(requireContext(), "Distance", Toast.LENGTH_SHORT).show()
+                            distanceFilter = true
+//                            Toast.makeText(requireContext(), "Distance", Toast.LENGTH_SHORT).show()
                         }
                     }else{
                         if(mapOptionsArrayFilterDialog[i] == scoreString){
-                            Toast.makeText(requireContext(), "Remove score", Toast.LENGTH_SHORT).show()
+                            scoreFilter = false
+//                            Toast.makeText(requireContext(), "Remove score", Toast.LENGTH_SHORT).show()
                         }else{
-                            Toast.makeText(requireContext(), "Remove distance", Toast.LENGTH_SHORT).show()
+                            distanceFilter = false
+//                            Toast.makeText(requireContext(), "Remove distance", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
