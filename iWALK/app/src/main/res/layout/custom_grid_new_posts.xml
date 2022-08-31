@@ -27,9 +27,9 @@
 
             <TextView
                 android:id="@+id/new_post_description_value"
-                android:layout_width="wrap_content"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:maxLines="10"
                 android:minLines="1"
@@ -42,11 +42,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="110dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.466"
-                app:layout_constraintStart_toEndOf="@+id/find_friends_add_friend"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="40dp"
                 app:srcCompat="@drawable/ic_save_changes" />
         </LinearLayout>
 
@@ -59,15 +55,16 @@
 
             <ImageView
                 android:id="@+id/new_posts_dog1_pictue_value"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
                 android:src="@drawable/ic_littledog2"/>
 
             <ImageView
                 android:id="@+id/new_posts_dog2_picture_value"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_littledog2"/>
