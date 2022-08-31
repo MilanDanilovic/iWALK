@@ -45,53 +45,68 @@
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/label_my_walks_in_progress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:text="IN PROGRESS"
+            android:textColor="@color/white"
+            android:layout_marginStart="150dp"
             android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutMyWalks">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutMyWalks"/>
 
-            <ScrollView
-                android:id="@+id/scroll"
-                android:layout_marginBottom="200dp"
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_marginBottom="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_my_walks_in_progress">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/active_my_walks_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_marginTop="20dp" />
+        </ScrollView>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/label_my_walks_finished"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FINISHED"
+            android:textColor="@color/white"
+            android:layout_marginStart="170dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scroll"/>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/active_my_walks_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="vertical"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+        <ScrollView
+            android:layout_marginBottom="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_my_walks_finished">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/old_my_walks_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="vertical"
-                        android:layout_marginTop="30dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/active_my_walks_recycler" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </ScrollView>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/old_my_walks_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_marginTop="30dp" />
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

@@ -6,7 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -33,6 +38,44 @@ class AdapterNewPosts(var ctx: Context, postsList: MutableList<Post>) :
             .into(newPostHolder.postDogImage2)
 
         baseAuth = FirebaseAuth.getInstance()
+
+        newPostHolder.acceptPost.setOnClickListener(View.OnClickListener { v ->
+
+            postsList.get(newPostHolder.adapterPosition).getPostId()?.let {
+                val documentReference = it?.let { it1 -> docRef.collection("posts").document(it1) }
+                documentReference?.update(
+                    "status", "IN_PROGRESS",
+                    "walkerId", baseAuth?.currentUser?.uid
+                )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                    if (task.isSuccessful) {
+                        val fragment: Fragment = NewPostsFragment()
+                        val fragmentManager = (ctx as FragmentActivity).supportFragmentManager
+                        val fragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.replace(
+                            R.id.new_posts_fragment,
+                            fragment
+                        )
+                        fragmentTransaction.addToBackStack(
+                            null
+                        )
+                        fragmentTransaction.commit()
+                        Toast.makeText(
+                            ctx,
+                            "Data successfully updated.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            ctx,
+                            "Error updating data.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })?.addOnFailureListener(OnFailureListener { })
+            }
+
+
+        })
     }
 
     override fun getItemCount(): Int {

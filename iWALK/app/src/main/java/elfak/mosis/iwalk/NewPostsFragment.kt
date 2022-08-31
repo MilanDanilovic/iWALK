@@ -43,7 +43,7 @@ class NewPostsFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        if (document.getString("userId") != auth.currentUser?.uid) {
+                        if (document.getString("userId") != auth.currentUser?.uid && document.getString("status") == "OPEN") {
                             val gridLayoutManager = GridLayoutManager(context, 1)
                             recyclerView!!.setLayoutManager(gridLayoutManager)
                             post = Post(
