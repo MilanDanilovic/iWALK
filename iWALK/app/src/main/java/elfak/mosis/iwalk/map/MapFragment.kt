@@ -103,7 +103,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if(locationResult.locations.isNotEmpty()){
                     val lastLocation = locationResult.lastLocation
                     if(lastLocation != null){
-                        val customInfoWindowAdapter = CustomInfoWindowAdapter(requireContext())
+                        val customInfoWindowAdapter = context?.let { CustomInfoWindowAdapter(it) }
                         map.setInfoWindowAdapter(customInfoWindowAdapter)
                         val latLng = LatLng(lastLocation.latitude,lastLocation.longitude)
 
@@ -151,7 +151,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     LatLng(user.latitude as Double, user.longitude as Double)
                                 val urlToUserProfileImage = user.profileImageUrl
                                 val userMarker: Marker
-                                val userDescription = "Name and Surname: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
+                                val userDescription = "Full name: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
                                         "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
 
                                 if (URLUtil.isValidUrl(urlToUserProfileImage)) {
