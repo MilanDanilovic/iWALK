@@ -151,7 +151,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                     LatLng(user.latitude as Double, user.longitude as Double)
                                 val urlToUserProfileImage = user.profileImageUrl
                                 val userMarker: Marker
-                                val userDescription = "Name and Surname: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
+                                val userDescription = "Full name: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
                                         "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
 
                                 if (URLUtil.isValidUrl(urlToUserProfileImage)) {
