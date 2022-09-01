@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="IN PROGRESS"
             android:textColor="@color/white"
-            android:layout_marginStart="150dp"
+            android:layout_marginStart="140dp"
             android:layout_marginTop="20dp"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +63,8 @@
             android:layout_marginBottom="200dp"
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/label_walks_in_progress">
@@ -73,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="5dp" />
         </ScrollView>
 
         <TextView
@@ -82,8 +83,8 @@
             android:layout_height="wrap_content"
             android:text="FINISHED"
             android:textColor="@color/white"
-            android:layout_marginStart="170dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="15dp"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +92,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="290dp"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="10dp"/>
         </ScrollView>
 
 

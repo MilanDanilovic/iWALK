@@ -31,6 +31,8 @@ class CustomGridFindFriendsFragment : Fragment() {
     private var requestAlreadySent: String = ""
     private var check: String = ""
 
+    private val friendRequestsRef = db.collection("friendRequests")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -43,7 +45,6 @@ class CustomGridFindFriendsFragment : Fragment() {
         addFriend = requireView().findViewById<ImageView>(R.id.find_friends_add_friend)
         val usersSenderRef: CollectionReference = db.collection("users")
         val usersReceiverRef: CollectionReference = db.collection("users")
-        val friendRequests: CollectionReference = db.collection("friendRequests")
         val usersRef: CollectionReference = db.collection("users")
         auth = Firebase.auth
 
@@ -77,7 +78,7 @@ class CustomGridFindFriendsFragment : Fragment() {
                 }
             }
 
-        friendRequests.get()
+        friendRequestsRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
@@ -91,10 +92,10 @@ class CustomGridFindFriendsFragment : Fragment() {
                             requestAlreadySent = "sentMe" //POSLAT MENI ZAHTEV
                             break
                         }
-                        /*else {
+                        else {
                             addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
                             requestAlreadySent = "false" //NIJE MI NI POSLAT NITI SAM POSLALA
-                        }*/
+                        }
                     }
                     if (check == "") {
                         addFriend.setImageDrawable(resources.getDrawable(R.drawable.ic_add_post))
@@ -119,7 +120,7 @@ class CustomGridFindFriendsFragment : Fragment() {
                         if (task.isSuccessful) {
                             for (document in task.result) {
                                 if (document["username"] == username.text.toString()) {
-                                    friendRequests.get()
+                                    friendRequestsRef.get()
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful) {
                                                 for (documentRequest in task.result) {
@@ -281,7 +282,7 @@ class CustomGridFindFriendsFragment : Fragment() {
                                                     if (taskDel.isSuccessful) {
                                                         for (documentDel in taskDel.result) {
                                                             if (documentDel["username"] == username.text.toString()) {
-                                                                friendRequests.get()
+                                                                friendRequestsRef.get()
                                                                     .addOnCompleteListener { task ->
                                                                         if (task.isSuccessful) {
                                                                             for (documentRequest in task.result) {

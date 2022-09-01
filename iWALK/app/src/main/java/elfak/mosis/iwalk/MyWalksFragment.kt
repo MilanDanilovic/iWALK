@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,7 +32,7 @@ class MyWalksFragment : Fragment() {
     var myWalksFinished: Walks? = null
     var myWalksFinishedList: ArrayList<Walks>? = null
 
-    val usersRef: CollectionReference = docRef.collection("posts")
+    private val postsRef = docRef.collection("posts")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +47,12 @@ class MyWalksFragment : Fragment() {
         myWalksFinishedList = ArrayList<Walks>()
         auth = Firebase.auth
 
-        val inProgressMyWalksRef: CollectionReference = docRef.collection("posts")
         recyclerViewInProgress = view.findViewById<View>(R.id.active_my_walks_recycler) as RecyclerView
-        inProgressMyWalksRef.get()
+        postsRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        if (document.getString("walker") == auth.currentUser?.uid && document.getString("status") == "IN_PROGRESS") {
+                        if (document.getString("walkerId") == auth.currentUser?.uid && document.getString("status") == "IN_PROGRESS") {
                             val gridLayoutManager = GridLayoutManager(context, 1)
                             recyclerViewInProgress!!.setLayoutManager(gridLayoutManager)
                             myWalksInProgress = Walks(
@@ -74,15 +74,20 @@ class MyWalksFragment : Fragment() {
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.exception)
                 }
+            }.addOnFailureListener { e ->
+                Toast.makeText(
+                    this@MyWalksFragment.context,
+                    "Error:" + e,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
-        val finishedMyWalksRef: CollectionReference = docRef.collection("posts")
         recyclerViewFinished = view.findViewById<View>(R.id.old_my_walks_recycler) as RecyclerView
-        finishedMyWalksRef.get()
+        postsRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        if (document.getString("walker") == auth.currentUser?.uid && document.getString("status") == "FINISHED") {
+                        if (document.getString("walkerId") == auth.currentUser?.uid && document.getString("status") == "FINISHED") {
                             val gridLayoutManager = GridLayoutManager(context, 1)
                             recyclerViewFinished!!.setLayoutManager(gridLayoutManager)
                             myWalksFinished = Walks(

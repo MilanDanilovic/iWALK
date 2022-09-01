@@ -1,12 +1,16 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,11 +33,29 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
         walksHolder.postDescription.setText(walksList[position].getPostDescription())
         walksHolder.postDate.setText(walksList[position].getPostDate())
         walksHolder.postTime.setText(walksList[position].getPostTime())
-        walksHolder.walkerUsername.setText(walksList[position].getPostWalkerUsername())
         Picasso.get().load(walksList[position].getPostDogImage1())
             .into(walksHolder.postDogImage1)
         Picasso.get().load(walksList[position].getPostDogImage2())
             .into(walksHolder.postDogImage2)
+
+        walksList.get(walksHolder.adapterPosition).getPostWalkerId()?.let {
+            docRef.collection("users")
+                .get()
+                .addOnCompleteListener{ task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            if (document.id == it) {
+                                walksHolder.walkerUsername.setText(document.getString("username"))
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("TAG", "Error getting documents: ", task.exception)
+                    }
+                }
+        }
+
+
     }
 
     override fun getItemCount(): Int {

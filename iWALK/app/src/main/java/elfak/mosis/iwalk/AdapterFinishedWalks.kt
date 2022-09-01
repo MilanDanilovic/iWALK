@@ -1,6 +1,7 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +29,29 @@ class AdapterFinishedWalks(var ctx: Context, walksList: MutableList<Walks>) :
     override fun onBindViewHolder(finishedWalksHolder: FinishedWalksHolder, position: Int) {
         finishedWalksHolder.postDate.setText(walksList[position].getPostDate())
         finishedWalksHolder.postTime.setText(walksList[position].getPostTime())
-        finishedWalksHolder.walkerUsername.setText(walksList[position].getPostWalkerUsername())
         Picasso.get().load(walksList[position].getPostDogImage1())
             .into(finishedWalksHolder.postDogImage1)
         Picasso.get().load(walksList[position].getPostDogImage2())
             .into(finishedWalksHolder.postDogImage2)
+
+        walksList.get(finishedWalksHolder.adapterPosition).getPostWalkerId()?.let {
+            docRef.collection("users")
+                .get()
+                .addOnCompleteListener{ task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            if (document.id == it) {
+                                finishedWalksHolder.walkerUsername.setText(document.getString("username"))
+                            }
+                        }
+                    }
+                    else {
+                        Log.d("TAG", "Error getting documents: ", task.exception)
+                    }
+                }
+        }
+
+
     }
 
     override fun getItemCount(): Int {
