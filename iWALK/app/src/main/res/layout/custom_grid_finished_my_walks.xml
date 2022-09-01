@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:background="#001419"
+        android:background="@drawable/btn_bg"
+        android:alpha="0.87"
         app:cardElevation="3dp"
         app:cardUseCompatPadding="true">
 
@@ -35,7 +36,7 @@
                 android:textColor="@color/white"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -48,7 +49,7 @@
                 android:maxLines="1"
                 android:minLines="1"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/my_finished_walks_date_label"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -60,7 +61,7 @@
                 android:textColor="@color/white"
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/my_finished_walks_date_value"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -73,7 +74,7 @@
                 android:maxLines="1"
                 android:minLines="1"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/my_finished_walks_time_label"/>
 

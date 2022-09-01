@@ -1,13 +1,22 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -33,6 +42,51 @@ class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) 
             .into(inProgressMyWalksHolder.postDogImage1)
         Picasso.get().load(walksList[position].getPostDogImage2())
             .into(inProgressMyWalksHolder.postDogImage2)
+
+        inProgressMyWalksHolder.cancel.setOnClickListener(View.OnClickListener { v ->
+            val alertDialog = AlertDialog.Builder(ctx, R.style.Theme_PopUpDialog)
+            alertDialog.setMessage("Are you sure you want to cancel this walk?")
+
+            alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+
+                val documentReference = walksList.get(inProgressMyWalksHolder.adapterPosition).getPostId()?.let { it -> docRef.collection("posts").document(it) }
+
+                documentReference?.update(
+                    "status", "OPEN",
+                    "walkerId", ""
+                )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                    if (task.isSuccessful) {
+
+                        val fragment: Fragment = MyWalksFragment()
+                        val fragmentManager = (ctx as FragmentActivity).supportFragmentManager
+                        val fragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.replace(
+                            R.id.my_walks_fragment,
+                            fragment
+                        )
+                        fragmentTransaction.addToBackStack(
+                            null
+                        )
+                        fragmentTransaction.commit()
+
+                        Toast.makeText(
+                            ctx,
+                            "Data successfully updated.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            ctx,
+                            "Error updating data.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })?.addOnFailureListener(OnFailureListener { })
+            })
+
+            alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+            alertDialog.show()
+        })
     }
 
     override fun getItemCount(): Int {
