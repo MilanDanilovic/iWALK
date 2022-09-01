@@ -2,6 +2,7 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.*
@@ -54,12 +55,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val surname:String? = null,
         val username:String? = null
     )
+
+    data class PostMarkerFromDatabase(
+        val description:String? = null,
+        val latitude: Number? = null,
+        val longitude: Number? = null,
+        val title: String? = null,
+        val userId: String? = null,
+    )
     var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
 
+    private var returnValue:Boolean=true
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
     private var auth: FirebaseAuth =  Firebase.auth
-	private var markers: MutableList<Marker> = mutableListOf()
+	private var postMarkers: MutableList<Marker> = mutableListOf()
     private lateinit var mapOptions : ImageView
     private val arrayChecked = booleanArrayOf(true,false)
     private val mapOptionsArray = arrayOf("Show users","Filter")
@@ -139,11 +149,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-                        getAllUsersFromDatabase()
+                        if(postMarkers.isNotEmpty()) {
+                            for (marker in postMarkers) {
+                                displayAcceptNearPostDialog(currentUserMarker!!, marker)
+                            }
+                        }
 
-                        for(marker in listOfOtherUsersMarkers){
-                            marker.remove()
-                            listOfOtherUsersMarkers.remove(marker)
+                        markerOnInfoWindowClick(map)
+
+                        getAllUsersFromDatabase()
+                        showPostMarkers()
+
+                        if(listOfOtherUsersMarkers.isNotEmpty()) {
+                            var valuesMarkesToRemove:MutableList<Marker> =  mutableListOf<Marker>()
+
+                            for (marker in listOfOtherUsersMarkers) {
+                                valuesMarkesToRemove.add(marker)
+                                marker.remove()
+                            }
+                            listOfOtherUsersMarkers.removeAll(valuesMarkesToRemove)
                         }
 
                         for(user in listOfOtherUsers) {
@@ -223,6 +247,79 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+        }
+    }
+
+    private fun showPostMarkers(){
+        val documentReference = docRef.collection("markers")
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        val markerFromDatabase = PostMarkerFromDatabase(
+                            document.getString("description"),
+                            document.get("latitude") as Number?,
+                            document.get("longitude") as Number?,
+                            document.getString("title"),
+                            document.getString("userId"),
+                        )
+                        val latLng = LatLng(markerFromDatabase.latitude as Double,
+                            markerFromDatabase.longitude as Double
+                        )
+                        val marker = map.addMarker(MarkerOptions().position(latLng).title(markerFromDatabase.title).snippet(markerFromDatabase.description))
+                        postMarkers.add(marker!!)
+                    }
+                }
+            }
+            .addOnFailureListener { e->
+                Log.d(TAG, "Markers not fetched: $e")
+            }
+    }
+
+    private fun checkIfUserIsCloseToPostMarker(userMarker:Marker, postMarker: Marker):Boolean{
+        val distanceBetweenMarkers = getDistance(userMarker.position.latitude,userMarker.position.longitude,
+            postMarker.position.latitude,postMarker.position.longitude)
+
+        return distanceBetweenMarkers<50
+    }
+
+    private fun checkIfPostMarkerBelongsToCurrentUser(postMarker: Marker) : Boolean{
+
+        val documentReference = docRef.collection("markers")
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document["userId"] == auth.currentUser?.uid && document["latitude"] == postMarker.position.latitude && document["longitude"] == postMarker.position.longitude) {
+                            returnValue = true
+                            break
+                        }else{
+                            returnValue = false
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { e->
+                Log.d(TAG, "Markers not fetched: $e")
+            }
+        return returnValue
+    }
+
+    private fun displayAcceptNearPostDialog(userMarker:Marker,postMarker: Marker){
+        if(checkIfUserIsCloseToPostMarker(userMarker,postMarker) && !checkIfPostMarkerBelongsToCurrentUser(postMarker)) {
+            lateinit var dialog: AlertDialog
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Accept post: " + postMarker.title)
+            builder.setMessage("Message: " + postMarker.snippet)
+            builder.setNegativeButton("No") { _, _ ->
+                Toast.makeText(requireContext(), "Declined", Toast.LENGTH_SHORT).show()
+            }
+            builder.setPositiveButton("OK") { _, _ ->
+                Toast.makeText(requireContext(), "Accepted", Toast.LENGTH_SHORT).show()
+            }
+
+            dialog = builder.create()
+            dialog.show()
         }
     }
 
@@ -462,10 +559,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-
-        val mMap = googleMap
-
+    private fun markerOnInfoWindowClick(mMap: GoogleMap){
         mMap.setOnInfoWindowClickListener { markerToDelete ->
             Log.i("TAG", "onWindowClickListener - delete marker")
 
@@ -495,7 +589,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                                         e
                                                     )
                                                 }
-                                            markers.remove(markerToDelete)
+                                            postMarkers.remove(markerToDelete)
                                             markerToDelete.remove()
                                         } else {
                                             Log.w(
@@ -511,8 +605,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
         }
+    }
 
-        mMap.setOnMapLongClickListener { latlng ->
+    override fun onMapReady(googleMap: GoogleMap) {
+
+        markerOnInfoWindowClick(googleMap)
+
+        googleMap.setOnMapLongClickListener { latlng ->
             Log.i("TAG", "onMapLongClickListener")
             showAlertDialog(latlng)
         }
@@ -522,7 +621,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showAlertDialog(latlng: LatLng) {
+    private fun showAlertDialog(latLng: LatLng) {
         val placeFormView = LayoutInflater.from(context).inflate(R.layout.dialog_create_place, null)
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Add post")
@@ -555,8 +654,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 dataToSave["description"] = description
             }
 
-            dataToSave["latitude"] = latlng.latitude
-            dataToSave["longitude"] = latlng.longitude
+            dataToSave["latitude"] = latLng.latitude
+            dataToSave["longitude"] = latLng.longitude
 
             if (query != null) {
                 dataToSave["userId"] = query
@@ -564,8 +663,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             docRef.collection("markers").add(dataToSave).addOnSuccessListener {
                 Log.d("TAG", "Marker is saved! ")
-                val marker = map.addMarker(MarkerOptions().position(latlng).title(title).snippet(description))
-                markers.add(marker!!)
+                val marker = map.addMarker(MarkerOptions().position(latLng).title(title).snippet(description))
+                postMarkers.add(marker!!)
                 dialog.dismiss()
             }.addOnFailureListener { e ->
                 Log.w("TAG", "Marker is not saved in database! ", e)
