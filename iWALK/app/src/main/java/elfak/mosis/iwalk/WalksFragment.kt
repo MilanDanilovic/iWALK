@@ -8,8 +8,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class WalksFragment : Fragment() {
+
+    var adapterInProgressWalks: AdapterInProgressWalks? = null
+    private val docRef = FirebaseFirestore.getInstance()
+    private lateinit var auth: FirebaseAuth
+    var recyclerViewInProgress: RecyclerView? = null
+    var walksInProgress: Walks? = null
+    var walksInProgressList: ArrayList<Walks>? = null
+
+    var adapterFinishedWalks: AdapterFinishedWalks? = null
+    var recyclerViewFinished: RecyclerView? = null
+    var walksFinished: Walks? = null
+    var walksFinishedList: ArrayList<Walks>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
