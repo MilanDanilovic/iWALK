@@ -2,13 +2,17 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +22,7 @@ import android.webkit.URLUtil
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,6 +38,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 import java.io.InputStream
@@ -62,6 +68,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val longitude: Number? = null,
         val title: String? = null,
         val userId: String? = null,
+        val dogImage1Url: String? = null,
+        val dogImage2Url: String? = null
     )
     var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
 
@@ -87,7 +95,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
+    private lateinit var imageUri: Uri
+    private lateinit var imageUri2: Uri
+    private var imageUrl : String? = null
+    private var imageUrl2 : String? = null
+    private lateinit var dogImage1 : ImageView
+    private lateinit var dogImage2 : ImageView
+
     private val docRef = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance().reference
+
 
 
     private var currentUserMarker: Marker? = null
@@ -262,6 +279,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             document.get("longitude") as Number?,
                             document.getString("title"),
                             document.getString("userId"),
+                            document.getString("dogImage1Url"),
+                            document.getString("dogImage2Url")
                         )
                         val latLng = LatLng(markerFromDatabase.latitude as Double,
                             markerFromDatabase.longitude as Double
@@ -630,6 +649,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .setPositiveButton("Ok", null)
             .show()
 
+        dogImage1 = placeFormView.findViewById<ImageView>(R.id.dogPictureOneCreatePlace)
+        dogImage2 = placeFormView.findViewById<ImageView>(R.id.dogPictureTwoCreatePlace)
+
+
+        dogImage1.setOnClickListener{
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            resultLauncherImage1.launch(intent)
+        }
+
+        dogImage2.setOnClickListener{
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            resultLauncherImage2.launch(intent)
+        }
+
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
             val title = placeFormView.findViewById<EditText>(R.id.etTitle).text.toString()
             val description = placeFormView.findViewById<EditText>(R.id.etDescription).text.toString()
@@ -653,6 +690,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             if(!TextUtils.isEmpty(description)) {
                 dataToSave["description"] = description
             }
+            if(!TextUtils.isEmpty(imageUrl)){
+                dataToSave["dogImage1Url"] = imageUrl!!
+                imageUrl=""
+                imageUri = Uri.EMPTY
+            }
+            if(!TextUtils.isEmpty(imageUrl2)){
+                dataToSave["dogImage2Url"] = imageUrl2!!
+                imageUrl2=""
+                imageUri2= Uri.EMPTY
+            }
 
             dataToSave["latitude"] = latLng.latitude
             dataToSave["longitude"] = latLng.longitude
@@ -672,6 +719,57 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         }
 
+    }
+    var resultLauncherImage1 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            if (data != null) {
+                imageUri = data.data!!
+                dogImage1.setImageURI(imageUri)
+                val bitmap = MediaStore.Images.Media.getBitmap(this@MapFragment.context?.contentResolver, imageUri)
+                dogImage1.setImageBitmap(bitmap)
+                uploadImage()
+            }
+        }
+    }
+
+    var resultLauncherImage2 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            if (data != null) {
+                imageUri2 = data.data!!
+                dogImage2.setImageURI(imageUri2)
+                val bitmap = MediaStore.Images.Media.getBitmap(this@MapFragment.context?.contentResolver, imageUri2)
+                dogImage2.setImageBitmap(bitmap)
+                uploadImage2()
+            }
+        }
+    }
+
+    private fun uploadImage() {
+        val ref = storage.child("postsPetImages1/" + System.currentTimeMillis())
+        val uploadTask = ref.putFile(imageUri)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl = uri.toString()
+
+            }
+        }
+    }
+
+    private fun uploadImage2() {
+        val ref = storage.child("postsPetImages2/" + System.currentTimeMillis())
+        val uploadTask = ref.putFile(imageUri2)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl2 = uri.toString()
+
+            }
+        }
     }
 
     override fun onCreateView(

@@ -10,7 +10,9 @@
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/activity_register.xml" value="0.265625" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_pets.xml" value="0.11944444444444445" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_info_window.xml" value="0.11944444444444445" />
-        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_post.xml" value="0.1082427536231884" />
+        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/dialog_create_place.xml" value="0.1" />
+        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_pet.xml" value="0.1945288753799392" />
+        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_post.xml" value="0.1" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.12360688956433637" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_map.xml" value="0.1" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_posts.xml" value="0.1" />
