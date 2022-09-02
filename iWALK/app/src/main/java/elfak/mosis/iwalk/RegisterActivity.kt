@@ -90,8 +90,8 @@ class RegisterActivity : AppCompatActivity() {
                                        dataToSave["username"] = usernameVal
                                        dataToSave["email"] = emailVal
                                        dataToSave["profileImageUrl"] = "default"
-                                       dataToSave["numberOfWalks"] = "0"
-                                       dataToSave["score"] = "0"
+                                       dataToSave["numberOfWalks"] = 0
+                                       dataToSave["score"] = 0
                                        dataToSave["phone"] = "Number is not entered"
                                        db.collection("users")
                                            .document(auth.currentUser!!.uid)

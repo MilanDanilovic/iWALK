@@ -3,7 +3,6 @@ package elfak.mosis.iwalk
 import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +10,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import java.util.*
 
 
 class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
@@ -69,28 +67,59 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
                 "status", "FINISHED"
             )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
                 if (task.isSuccessful) {
+                    val placeFormView = LayoutInflater.from(ctx).inflate(R.layout.dialog_rate_user, null)
+                    val dialog = AlertDialog.Builder(ctx)
+                        .setTitle("Rate user")
+                        .setView(placeFormView)
+                        .setPositiveButton("Ok", null)
+                        .setCancelable(false)
+                        .show()
 
-                    //TODO
-                    /*val alertDialog = AlertDialog.Builder(ctx, R.style.Theme_PopUpDialog)
-                    alertDialog.setMessage("Please review this walker")
-                    alertDialog.setCancelable(false)
+                    val userDocumentReference = docRef.collection("users")
+                        .document(walksList[walksHolder.adapterPosition].getPostWalkerId()!!)
 
-                    alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                        val fragment: Fragment = MyPetsFragment()
-                        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.edit_pet_fragment, fragment)
-                        fragmentTransaction.addToBackStack(null)
-                        fragmentTransaction.commit()
+                    val rateBar = placeFormView.findViewById<RatingBar>(R.id.rating_bar_user)
 
-                        val newName = name.text.toString()
-                        val newBreed = breed.text.toString()
-                        val newWeight = weight.text.toString()
-                        val newDescription = description.text.toString()
-                        val newImage = imageUrl
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
 
-                    })
-                    alertDialog.show()*/
+                        val userReference = docRef.collection("users")
+                            .document(walksList[walksHolder.adapterPosition].getPostWalkerId()!!)
+
+                        userDocumentReference.get()
+                            .addOnCompleteListener { taskUser ->
+                                if (taskUser.isSuccessful) {
+                                    var score = taskUser.result.get("score")!! as Number
+                                    var numberOfWalks = (taskUser.result.get("numberOfWalks")!! as Number).toDouble() + 1
+
+                                    val avgScore = (score.toDouble()+rateBar.rating)/numberOfWalks
+                                    val avgScoreTwoDecimal =
+                                        (Math.round(avgScore * 100.0) / 100.0).toFloat()
+
+
+                                    val dataToSave: MutableMap<String, Any> =
+                                        HashMap()
+
+
+                                    dataToSave["score"] = avgScoreTwoDecimal as Number
+                                    dataToSave["numberOfWalks"] = numberOfWalks as Number
+
+
+                                    userReference.update(dataToSave)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                            } else {
+                                                Toast.makeText(
+                                                    ctx,
+                                                    "Error while updating data!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }.addOnFailureListener { }
+                                }
+                            }
+                        dialog.dismiss()
+                    }
+
 
                     val fragment: Fragment = WalksFragment()
                     val fragmentManager = (ctx as FragmentActivity).supportFragmentManager

@@ -11,6 +11,7 @@
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_pets.xml" value="0.11944444444444445" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_info_window.xml" value="0.11944444444444445" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/dialog_create_place.xml" value="0.264" />
+        <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/dialog_rate_user.xml" value="0.39895833333333336" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_pet.xml" value="0.1945288753799392" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_add_post.xml" value="0.4" />
         <entry key="..\:/FAX/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.12360688956433637" />
@@ -95,21 +96,8 @@
         <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_finished_walks.xml" value="0.4" />
         <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_in_progress_my_walks.xml" value="0.4" />
         <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_in_progress_walks.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_walkers.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_walkers_favourite.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_custom_grid_find_friends.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_custom_review.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_edit_profile.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_favourite_walkers.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_message_for_walker.xml" value="0.4" />
         <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_my_walks.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_persons_pets.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_pet_info.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_profile.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_requests_friends.xml" value="0.4" />
         <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/fragment_walks.xml" value="0.4" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/layout/nav_header.xml" value="0.21041666666666667" />
-        <entry key="..\:/mosis app/MOSIS-Projekat/iWALK/app/src/main/res/menu/drawer_menu.xml" value="0.21041666666666667" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_all_friends.xml" value="0.24547101449275363" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_find_friends.xml" value="0.24547101449275363" />
         <entry key="..\:/mosis/MOSIS-Projekat/iWALK/app/src/main/res/layout/custom_grid_requests_friends.xml" value="0.24547101449275363" />
