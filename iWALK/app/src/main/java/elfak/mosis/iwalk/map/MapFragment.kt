@@ -31,7 +31,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
@@ -41,6 +43,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
+import kotlinx.coroutines.*
 import org.w3c.dom.Text
 import java.io.InputStream
 import java.net.URL
@@ -74,7 +77,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val title: String? = null,
         val userId: String? = null,
         val dogImage1Url: String? = null,
-        val dogImage2Url: String? = null
+        val dogImage2Url: String? = null,
+        val desiredWalkTime: String?=null
     )
     var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
 
@@ -175,16 +179,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-                        if(postMarkers.isNotEmpty()) {
-                            for (marker in postMarkers) {
-                                displayAcceptNearPostDialog(currentUserMarker!!, marker)
-                            }
-                        }
+
+
+                        showPostMarkers(currentUserMarker!!)
 
                         markerOnInfoWindowClick(map)
 
                         getAllUsersFromDatabase()
-                        showPostMarkers()
 
                         if(listOfOtherUsersMarkers.isNotEmpty()) {
                             var valuesMarkesToRemove:MutableList<Marker> =  mutableListOf<Marker>()
@@ -276,26 +277,44 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showPostMarkers(){
+    private fun showPostMarkers(currentUserMakrer: Marker){
+        if(postMarkers.isNotEmpty()) {
+            var valuesPostMarkesToRemove:MutableList<Marker> =  mutableListOf<Marker>()
+
+            for (marker in postMarkers) {
+                valuesPostMarkesToRemove.add(marker)
+                marker.remove()
+            }
+            postMarkers.removeAll(valuesPostMarkesToRemove)
+        }
+
         val documentReference = docRef.collection("markers")
         documentReference.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        val markerFromDatabase = PostMarkerFromDatabase(
-                            document.getString("description"),
-                            document.get("latitude") as Number?,
-                            document.get("longitude") as Number?,
-                            document.getString("title"),
-                            document.getString("userId"),
-                            document.getString("dogImage1Url"),
-                            document.getString("dogImage2Url")
-                        )
-                        val latLng = LatLng(markerFromDatabase.latitude as Double,
-                            markerFromDatabase.longitude as Double
-                        )
-                        val marker = map.addMarker(MarkerOptions().position(latLng).title(markerFromDatabase.title).snippet(markerFromDatabase.description))
-                        postMarkers.add(marker!!)
+                        if (document["status"] == "OPEN") {
+                            val markerFromDatabase = PostMarkerFromDatabase(
+                                document.getString("description"),
+                                document.get("latitude") as Number?,
+                                document.get("longitude") as Number?,
+                                document.getString("title"),
+                                document.getString("userId"),
+                                document.getString("dogImage1Url"),
+                                document.getString("dogImage2Url"),
+                                document.getString("date")+" "+document.getString("time")
+                            )
+                            val latLng = LatLng(
+                                markerFromDatabase.latitude as Double,
+                                markerFromDatabase.longitude as Double
+                            )
+                            val marker = map.addMarker(
+                                MarkerOptions().position(latLng).title(markerFromDatabase.title)
+                                    .snippet(markerFromDatabase.description+"\r\n"+"Should be walked on: "+markerFromDatabase.desiredWalkTime)
+                            )
+                            postMarkers.add(marker!!)
+                            displayAcceptNearPostDialog(currentUserMarker!!,marker)
+                        }
                     }
                 }
             }
@@ -333,6 +352,51 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return returnValue
     }
 
+    private fun updateUserPost(documentReference:DocumentReference, walkerId: String){
+        documentReference.update(
+            "status", "IN_PROGRESS",
+            "walkerId", walkerId
+        ).addOnCompleteListener(OnCompleteListener<Void?> { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(
+                    context,
+                    "Data successfully updated.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Error updating data.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
+    private fun acceptUserPost(postMarker: Marker){
+        val documentReference = docRef.collection("markers")
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document["userId"] != auth.currentUser?.uid && document["latitude"] == postMarker.position.latitude && document["longitude"] == postMarker.position.longitude) {
+                            CoroutineScope(GlobalScope.coroutineContext).launch(Dispatchers.IO) {
+
+                                withContext(Dispatchers.Main) {
+                                    updateUserPost(document.reference,auth.currentUser?.uid.toString())
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { e->
+                Log.d(TAG, "Markers not fetched: $e")
+            }
+    }
+
+
+
     private fun displayAcceptNearPostDialog(userMarker:Marker,postMarker: Marker){
         if(checkIfUserIsCloseToPostMarker(userMarker,postMarker) && !checkIfPostMarkerBelongsToCurrentUser(postMarker)) {
             lateinit var dialog: AlertDialog
@@ -343,6 +407,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Toast.makeText(requireContext(), "Declined", Toast.LENGTH_SHORT).show()
             }
             builder.setPositiveButton("OK") { _, _ ->
+                acceptUserPost(postMarker)
                 Toast.makeText(requireContext(), "Accepted", Toast.LENGTH_SHORT).show()
             }
 
