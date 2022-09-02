@@ -77,8 +77,8 @@ class WalkerInfoFragment : Fragment() {
                             walkerName.setText(document.getString("name"))
                             walkerSurname.setText(document.getString("surname"))
                             walkerUsername.setText(document.getString("username"))
-                            walkerScore.setText(document.getString("score"))
-                            walkerNumberOfWalks.setText(document.getString("numberOfWalks"))
+                            walkerScore.setText(document["score"].toString())
+                            walkerNumberOfWalks.setText(document["numberOfWalks"].toString())
                             walkerPhone.setText(document.getString("phone"))
                             walkerEmail.setText(document.getString("email"))
                         }
