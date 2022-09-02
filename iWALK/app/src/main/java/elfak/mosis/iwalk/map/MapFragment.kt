@@ -2,22 +2,27 @@ package elfak.mosis.iwalk.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,18 +31,27 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
+import kotlinx.coroutines.*
+import org.w3c.dom.Text
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
+import java.text.SimpleDateFormat
+import java.time.Month
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.*
 
 
@@ -62,6 +76,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val longitude: Number? = null,
         val title: String? = null,
         val userId: String? = null,
+        val dogImage1Url: String? = null,
+        val dogImage2Url: String? = null,
+        val desiredWalkTime: String?=null
     )
     var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
 
@@ -87,7 +104,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
 
+    private lateinit var imageUri: Uri
+    private lateinit var imageUri2: Uri
+    private var imageUrl : String? = null
+    private var imageUrl2 : String? = null
+    private lateinit var dogImage1 : ImageView
+    private lateinit var dogImage2 : ImageView
+    private lateinit var pickTimeButton: Button
+    private lateinit var tvPostTime: TextView
+    private lateinit var pickDateButton: Button
+    private lateinit var tvPostDate: TextView
+
     private val docRef = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance().reference
+
 
 
     private var currentUserMarker: Marker? = null
@@ -149,16 +179,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             .anchor(0.5f,0.5f)
                             .rotation(lastLocation.bearing))
 
-                        if(postMarkers.isNotEmpty()) {
-                            for (marker in postMarkers) {
-                                displayAcceptNearPostDialog(currentUserMarker!!, marker)
-                            }
-                        }
+
+
+                        showPostMarkers(currentUserMarker!!)
 
                         markerOnInfoWindowClick(map)
 
                         getAllUsersFromDatabase()
-                        showPostMarkers()
 
                         if(listOfOtherUsersMarkers.isNotEmpty()) {
                             var valuesMarkesToRemove:MutableList<Marker> =  mutableListOf<Marker>()
@@ -250,24 +277,44 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showPostMarkers(){
+    private fun showPostMarkers(currentUserMakrer: Marker){
+        if(postMarkers.isNotEmpty()) {
+            var valuesPostMarkesToRemove:MutableList<Marker> =  mutableListOf<Marker>()
+
+            for (marker in postMarkers) {
+                valuesPostMarkesToRemove.add(marker)
+                marker.remove()
+            }
+            postMarkers.removeAll(valuesPostMarkesToRemove)
+        }
+
         val documentReference = docRef.collection("markers")
         documentReference.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        val markerFromDatabase = PostMarkerFromDatabase(
-                            document.getString("description"),
-                            document.get("latitude") as Number?,
-                            document.get("longitude") as Number?,
-                            document.getString("title"),
-                            document.getString("userId"),
-                        )
-                        val latLng = LatLng(markerFromDatabase.latitude as Double,
-                            markerFromDatabase.longitude as Double
-                        )
-                        val marker = map.addMarker(MarkerOptions().position(latLng).title(markerFromDatabase.title).snippet(markerFromDatabase.description))
-                        postMarkers.add(marker!!)
+                        if (document["status"] == "OPEN") {
+                            val markerFromDatabase = PostMarkerFromDatabase(
+                                document.getString("description"),
+                                document.get("latitude") as Number?,
+                                document.get("longitude") as Number?,
+                                document.getString("title"),
+                                document.getString("userId"),
+                                document.getString("dogImage1Url"),
+                                document.getString("dogImage2Url"),
+                                document.getString("date")+" "+document.getString("time")
+                            )
+                            val latLng = LatLng(
+                                markerFromDatabase.latitude as Double,
+                                markerFromDatabase.longitude as Double
+                            )
+                            val marker = map.addMarker(
+                                MarkerOptions().position(latLng).title(markerFromDatabase.title)
+                                    .snippet(markerFromDatabase.description+"\r\n"+"Should be walked on: "+markerFromDatabase.desiredWalkTime)
+                            )
+                            postMarkers.add(marker!!)
+                            displayAcceptNearPostDialog(currentUserMarker!!,marker)
+                        }
                     }
                 }
             }
@@ -305,6 +352,51 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return returnValue
     }
 
+    private fun updateUserPost(documentReference:DocumentReference, walkerId: String){
+        documentReference.update(
+            "status", "IN_PROGRESS",
+            "walkerId", walkerId
+        ).addOnCompleteListener(OnCompleteListener<Void?> { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(
+                    context,
+                    "Data successfully updated.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Error updating data.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
+    private fun acceptUserPost(postMarker: Marker){
+        val documentReference = docRef.collection("markers")
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        if (document["userId"] != auth.currentUser?.uid && document["latitude"] == postMarker.position.latitude && document["longitude"] == postMarker.position.longitude) {
+                            CoroutineScope(GlobalScope.coroutineContext).launch(Dispatchers.IO) {
+
+                                withContext(Dispatchers.Main) {
+                                    updateUserPost(document.reference,auth.currentUser?.uid.toString())
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { e->
+                Log.d(TAG, "Markers not fetched: $e")
+            }
+    }
+
+
+
     private fun displayAcceptNearPostDialog(userMarker:Marker,postMarker: Marker){
         if(checkIfUserIsCloseToPostMarker(userMarker,postMarker) && !checkIfPostMarkerBelongsToCurrentUser(postMarker)) {
             lateinit var dialog: AlertDialog
@@ -315,6 +407,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Toast.makeText(requireContext(), "Declined", Toast.LENGTH_SHORT).show()
             }
             builder.setPositiveButton("OK") { _, _ ->
+                acceptUserPost(postMarker)
                 Toast.makeText(requireContext(), "Accepted", Toast.LENGTH_SHORT).show()
             }
 
@@ -611,9 +704,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         markerOnInfoWindowClick(googleMap)
 
-        googleMap.setOnMapLongClickListener { latlng ->
+        googleMap.setOnMapLongClickListener { latLng ->
             Log.i("TAG", "onMapLongClickListener")
-            showAlertDialog(latlng)
+            showAlertDialog(latLng)
         }
         googleMap.let {
             map = it
@@ -629,6 +722,53 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Ok", null)
             .show()
+
+        dogImage1 = placeFormView.findViewById<ImageView>(R.id.dogPictureOneCreatePlace)
+        dogImage2 = placeFormView.findViewById<ImageView>(R.id.dogPictureTwoCreatePlace)
+        pickTimeButton = placeFormView.findViewById<Button>(R.id.pickTimeButton)
+        tvPostTime = placeFormView.findViewById<TextView>(R.id.postTimeTextView)
+        pickDateButton = placeFormView.findViewById<Button>(R.id.pickDateButton)
+        tvPostDate = placeFormView.findViewById(R.id.postDatePickerTextView)
+
+        //Calendar
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        pickDateButton.setOnClickListener {
+            val dpd = DatePickerDialog( requireContext(),DatePickerDialog.OnDateSetListener { view: DatePicker, mYear: Int, mMOnth: Int, mDay: Int ->
+                val dateTextValue = "$mDay/${mMOnth+1}/$mYear"
+                tvPostDate.text= dateTextValue
+
+            },year,month,day)
+            dpd.show()
+        }
+
+        pickTimeButton.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener{ _: TimePicker, hour:Int, minute:Int->
+                cal.set(Calendar.HOUR_OF_DAY,hour)
+                cal.set(Calendar.MINUTE,minute)
+
+                tvPostTime.text = SimpleDateFormat("HH:mm").format(cal.time)
+            }
+            TimePickerDialog(requireContext(),timeSetListener,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),true).show()
+        }
+
+        dogImage1.setOnClickListener{
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            resultLauncherImage1.launch(intent)
+        }
+
+        dogImage2.setOnClickListener{
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            resultLauncherImage2.launch(intent)
+        }
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
             val title = placeFormView.findViewById<EditText>(R.id.etTitle).text.toString()
@@ -653,6 +793,27 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             if(!TextUtils.isEmpty(description)) {
                 dataToSave["description"] = description
             }
+            if(!TextUtils.isEmpty(imageUrl)){
+                dataToSave["dogImage1Url"] = imageUrl!!
+                imageUrl=""
+                imageUri = Uri.EMPTY
+            }
+            if(!TextUtils.isEmpty(imageUrl2)){
+                dataToSave["dogImage2Url"] = imageUrl2!!
+                imageUrl2=""
+                imageUri2= Uri.EMPTY
+            }
+            if(!TextUtils.isEmpty(tvPostTime.text.toString())) {
+                dataToSave["time"] = tvPostTime.text.toString()
+            }
+            if(!TextUtils.isEmpty(tvPostDate.text.toString())) {
+                dataToSave["date"] = tvPostDate.text.toString()
+            }
+            dataToSave["timeOfPosting"] = Calendar.getInstance().time
+            dataToSave["status"] = "OPEN"
+            dataToSave["walkerId"] = ""
+
+
 
             dataToSave["latitude"] = latLng.latitude
             dataToSave["longitude"] = latLng.longitude
@@ -672,6 +833,57 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         }
 
+    }
+    var resultLauncherImage1 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            if (data != null) {
+                imageUri = data.data!!
+                dogImage1.setImageURI(imageUri)
+                val bitmap = MediaStore.Images.Media.getBitmap(this@MapFragment.context?.contentResolver, imageUri)
+                dogImage1.setImageBitmap(bitmap)
+                uploadImage()
+            }
+        }
+    }
+
+    var resultLauncherImage2 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            if (data != null) {
+                imageUri2 = data.data!!
+                dogImage2.setImageURI(imageUri2)
+                val bitmap = MediaStore.Images.Media.getBitmap(this@MapFragment.context?.contentResolver, imageUri2)
+                dogImage2.setImageBitmap(bitmap)
+                uploadImage2()
+            }
+        }
+    }
+
+    private fun uploadImage() {
+        val ref = storage.child("postsPetImages1/" + System.currentTimeMillis())
+        val uploadTask = ref.putFile(imageUri)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl = uri.toString()
+
+            }
+        }
+    }
+
+    private fun uploadImage2() {
+        val ref = storage.child("postsPetImages2/" + System.currentTimeMillis())
+        val uploadTask = ref.putFile(imageUri2)
+        uploadTask.addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { uri ->
+
+                imageUrl2 = uri.toString()
+
+            }
+        }
     }
 
     override fun onCreateView(
