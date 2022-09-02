@@ -68,8 +68,6 @@ class LoginActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
 
-                                retrieveAndStoreToken()
-
                                 startActivity(Intent(applicationContext, HomeActivity::class.java))
                             } else{
 
@@ -127,44 +125,6 @@ class LoginActivity : AppCompatActivity() {
                 passwordResetDialog.create().show()
 
         }
-    }
-
-    private fun retrieveAndStoreToken() {
-
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val token: String? = task.result
-                    val userId : String? = FirebaseAuth.getInstance().uid
-                    val dataToSave: MutableMap<String, Any> =
-                        HashMap()
-
-                    if (token != null) {
-                        dataToSave["tokenValue"] = token
-                    }
-                    if (userId != null) {
-                        dataToSave["userId"] = userId
-                    }
-
-                    docRef.collection("tokens").add(dataToSave).addOnSuccessListener {
-                        Log.d("TAG", "Pet is saved! ")
-                        Toast.makeText(
-                            applicationContext,
-                            "tokens is saved in database!",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    }.addOnFailureListener { e ->
-                        Toast.makeText(
-                            applicationContext,
-                            "tokens is not saved! Try again! ",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        Log.w("TAG", "tokens is not saved in database! ", e)
-                    }
-                }
-            }
-
     }
 
     public override fun onStart() {

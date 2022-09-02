@@ -59,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutWalks"/>
 
         <ScrollView
-            android:id="@+id/scroll"
+            android:id="@+id/scrollInProgressWalks"
             android:layout_marginBottom="200dp"
             android:layout_width="match_parent"
             android:layout_height="280dp"
@@ -84,17 +84,18 @@
             android:text="FINISHED"
             android:textColor="@color/white"
             android:layout_marginStart="150dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scroll"/>
+            app:layout_constraintTop_toBottomOf="@+id/scrollInProgressWalks"/>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="290dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
+            android:paddingBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/label_walks_finished">
 
@@ -103,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="5dp"/>
         </ScrollView>
 
 

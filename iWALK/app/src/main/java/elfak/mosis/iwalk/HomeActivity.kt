@@ -134,8 +134,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, ProfileFragment()).commit()
             R.id.nav_favourite_walkers -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, FavouriteWalkersFragment()).commit()
-            R.id.nav_active_walkers -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ActiveUsersFragment()).commit()
             R.id.nav_my_pets -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MyPetsFragment()).commit()
             R.id.nav_posts -> supportFragmentManager.beginTransaction()
@@ -143,61 +141,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_walks -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, WalksFragment()).commit()
             R.id.nav_logout -> {
-                clearTokensAndLogOut()
+                Firebase.auth.signOut()
+                val i: Intent = Intent(this, MainActivity::class.java)
+                startActivity(i)
             }
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun clearTokensAndLogOut() {
-
-        var tokenId: String? = null
-        val tokens: CollectionReference = db.collection("tokens")
-        tokens.get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-
-                        if (document["userId"] == FirebaseAuth.getInstance().currentUser!!.uid) {
-                            tokenId = document.id
-
-                            db.collection("tokens").document(tokenId!!)
-                                .delete()
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Firebase.auth.signOut()
-                                        val i: Intent = Intent(this, MainActivity::class.java)
-                                        startActivity(i)
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "tokens is deleted!",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Error deleting tokens!",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        Log.w(
-                                            "TAG",
-                                            "Error deleting tokens"
-                                        )
-                                    }
-                                }
-                        }
-                    }
-                }
-                else {
-                    Log.d("TAG", "Error getting tokens: ", task.exception)
-                }
-            }
-            .addOnFailureListener{task -> Toast.makeText(
-                applicationContext,
-                "Error deleting tokens!",
-                Toast.LENGTH_LONG
-            ).show()}
-
-    }
 }

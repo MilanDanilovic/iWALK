@@ -1,13 +1,18 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -65,13 +70,29 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
             )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
                 if (task.isSuccessful) {
 
-                    popUp = PopupWindow(ctx)
-                    val layout = LinearLayout(ctx)
-                    val mainLayout = LinearLayout(ctx)
-                    val gradeLabel = TextView(ctx)
-                    gradeLabel.setText("Select grade for walker")
+                    //TODO
+                    /*val alertDialog = AlertDialog.Builder(ctx, R.style.Theme_PopUpDialog)
+                    alertDialog.setMessage("Please review this walker")
+                    alertDialog.setCancelable(false)
 
-                    /*val fragment: Fragment = WalksFragment()
+                    alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                        val fragment: Fragment = MyPetsFragment()
+                        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+                        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.replace(R.id.edit_pet_fragment, fragment)
+                        fragmentTransaction.addToBackStack(null)
+                        fragmentTransaction.commit()
+
+                        val newName = name.text.toString()
+                        val newBreed = breed.text.toString()
+                        val newWeight = weight.text.toString()
+                        val newDescription = description.text.toString()
+                        val newImage = imageUrl
+
+                    })
+                    alertDialog.show()*/
+
+                    val fragment: Fragment = WalksFragment()
                     val fragmentManager = (ctx as FragmentActivity).supportFragmentManager
                     val fragmentTransaction = fragmentManager.beginTransaction()
                     fragmentTransaction.replace(
@@ -81,13 +102,14 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
                     fragmentTransaction.addToBackStack(
                         null
                     )
-                    fragmentTransaction.commit()*/
+                    fragmentTransaction.commit()
 
                     Toast.makeText(
                         ctx,
                         "Data successfully updated.",
                         Toast.LENGTH_SHORT
                     ).show()
+
                 } else {
                     Toast.makeText(
                         ctx,
@@ -96,30 +118,11 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
                     ).show()
                 }
             })?.addOnFailureListener(OnFailureListener { })
+        })
 
 
 
-            /*
-
-            val but = Button(this)
-            but.text = "Click Me"
-            but.setOnClickListener(object : OnClickListener() {
-                fun onClick(v: View?) {
-                    if (click) {
-                        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10)
-                        popUp.update(50, 50, 300, 80)
-                        click = false
-                    } else {
-                        popUp.dismiss()
-                        click = true
-                    }
-                }
-            })*/
-            })
-
-
-
-        }
+    }
 
 
 
