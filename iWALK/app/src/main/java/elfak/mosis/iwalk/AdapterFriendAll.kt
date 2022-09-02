@@ -2,14 +2,17 @@ package elfak.mosis.iwalk
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +42,15 @@ class AdapterFriendAll (var ctx: Context, allFriendsList: MutableList<Friend>) :
         Picasso.get().load(allFriendsList[position].getFriendImage())
             .into(allFriendsHolder.friendImage)
         baseAuth = FirebaseAuth.getInstance()
+
+        allFriendsHolder.layout.setOnClickListener(View.OnClickListener { v ->
+            val activity= ctx as AppCompatActivity
+            val walkerInfoFragment= WalkerInfoFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", allFriendsList[position].getFriendId())
+            walkerInfoFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.all_friends_fragment, walkerInfoFragment).commit()
+        })
 
         allFriendsHolder.delete.setOnClickListener(View.OnClickListener { v->
             val alertDialog = AlertDialog.Builder(v.context, R.style.Theme_PopUpDialog)
@@ -162,10 +174,12 @@ class AllFriendsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var friendImage: CircleImageView
     var friendUsername: TextView
     var delete: ImageView
+    var layout: LinearLayout
 
     init {
         friendImage = itemView.findViewById(R.id.all_friends_profile_picture)
         friendUsername = itemView.findViewById(R.id.all_friends_username_value)
         delete = itemView.findViewById(R.id.all_friends_delete_friend)
+        layout = itemView.findViewById(R.id.custom_grid_all_friends)
     }
 }

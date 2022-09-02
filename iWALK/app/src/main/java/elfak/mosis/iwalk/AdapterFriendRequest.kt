@@ -1,6 +1,7 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -43,6 +46,7 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
         baseAuth = FirebaseAuth.getInstance()
         val usersRef: CollectionReference = db.collection("users")
         auth = Firebase.auth
+
 
         friendRequestHolder.decline.setOnClickListener(View.OnClickListener {  v ->
             friendRequestsList.get(friendRequestHolder.getAdapterPosition()).getFriendId()?.let {
@@ -196,6 +200,15 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                         Log.d("TAG", "Error getting documents: ", task.exception)
                     }
                 }
+        })
+
+        friendRequestHolder.layout.setOnClickListener(View.OnClickListener { v ->
+            val activity= ctx as AppCompatActivity
+            val walkerInfoFragment= WalkerInfoFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", requestUserId)
+            walkerInfoFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.requests_friends_fragment, walkerInfoFragment).commit()
         })
     }
 

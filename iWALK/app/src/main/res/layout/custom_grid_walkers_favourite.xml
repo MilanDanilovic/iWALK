@@ -42,22 +42,11 @@
             android:id="@+id/walkers_send_message"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="96dp"
+            android:layout_marginStart="130dp"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toEndOf="@+id/favourite_walker_username_value"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_send_message" />
-
-        <ImageView
-            android:id="@+id/walkers_heart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
-            app:layout_constraintStart_toEndOf="@+id/walkers_send_message"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_heart_full" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

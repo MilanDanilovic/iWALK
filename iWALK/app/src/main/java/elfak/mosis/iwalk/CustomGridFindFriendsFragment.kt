@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +29,7 @@ class CustomGridFindFriendsFragment : Fragment() {
     private lateinit var username : TextView
     private lateinit var image : CircleImageView
     private lateinit var addFriend : ImageView
+    private lateinit var constraint : ConstraintLayout
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
@@ -40,6 +45,7 @@ class CustomGridFindFriendsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        constraint = requireView().findViewById<ConstraintLayout>(R.id.constraint_layout_find_friends)
         username = requireView().findViewById<TextView>(R.id.find_friends_username_value)
         image = requireView().findViewById<CircleImageView>(R.id.find_friends_profile_picture)
         addFriend = requireView().findViewById<ImageView>(R.id.find_friends_add_friend)
@@ -55,6 +61,15 @@ class CustomGridFindFriendsFragment : Fragment() {
                 .into(image)
             userId = bundle.getString("user_id")!!
         }
+
+        constraint.setOnClickListener(View.OnClickListener {
+            val activity= context as AppCompatActivity
+            val walkerInfoFragment= WalkerInfoFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", userId)
+            walkerInfoFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.find_friends_fragment, walkerInfoFragment).commit()
+        })
 
         usersReceiverRef.get()
             .addOnCompleteListener { task ->
