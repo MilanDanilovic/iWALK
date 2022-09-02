@@ -3,6 +3,8 @@ package elfak.mosis.iwalk.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.Intent
@@ -19,9 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -41,9 +41,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
+import org.w3c.dom.Text
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
+import java.text.SimpleDateFormat
+import java.time.Month
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.*
 
 
@@ -101,6 +106,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var imageUrl2 : String? = null
     private lateinit var dogImage1 : ImageView
     private lateinit var dogImage2 : ImageView
+    private lateinit var pickTimeButton: Button
+    private lateinit var tvPostTime: TextView
+    private lateinit var pickDateButton: Button
+    private lateinit var tvPostDate: TextView
 
     private val docRef = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance().reference
@@ -630,9 +639,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         markerOnInfoWindowClick(googleMap)
 
-        googleMap.setOnMapLongClickListener { latlng ->
+        googleMap.setOnMapLongClickListener { latLng ->
             Log.i("TAG", "onMapLongClickListener")
-            showAlertDialog(latlng)
+            showAlertDialog(latLng)
         }
         googleMap.let {
             map = it
@@ -651,7 +660,36 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         dogImage1 = placeFormView.findViewById<ImageView>(R.id.dogPictureOneCreatePlace)
         dogImage2 = placeFormView.findViewById<ImageView>(R.id.dogPictureTwoCreatePlace)
+        pickTimeButton = placeFormView.findViewById<Button>(R.id.pickTimeButton)
+        tvPostTime = placeFormView.findViewById<TextView>(R.id.postTimeTextView)
+        pickDateButton = placeFormView.findViewById<Button>(R.id.pickDateButton)
+        tvPostDate = placeFormView.findViewById(R.id.postDatePickerTextView)
 
+        //Calendar
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        pickDateButton.setOnClickListener {
+            val dpd = DatePickerDialog( requireContext(),DatePickerDialog.OnDateSetListener { view: DatePicker, mYear: Int, mMOnth: Int, mDay: Int ->
+                val dateTextValue = "$mDay/${mMOnth+1}/$mYear"
+                tvPostDate.text= dateTextValue
+
+            },year,month,day)
+            dpd.show()
+        }
+
+        pickTimeButton.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener{ _: TimePicker, hour:Int, minute:Int->
+                cal.set(Calendar.HOUR_OF_DAY,hour)
+                cal.set(Calendar.MINUTE,minute)
+
+                tvPostTime.text = SimpleDateFormat("HH:mm").format(cal.time)
+            }
+            TimePickerDialog(requireContext(),timeSetListener,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),true).show()
+        }
 
         dogImage1.setOnClickListener{
             val intent = Intent()
@@ -700,6 +738,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 imageUrl2=""
                 imageUri2= Uri.EMPTY
             }
+            if(!TextUtils.isEmpty(tvPostTime.text.toString())) {
+                dataToSave["time"] = tvPostTime.text.toString()
+            }
+            if(!TextUtils.isEmpty(tvPostDate.text.toString())) {
+                dataToSave["date"] = tvPostDate.text.toString()
+            }
+            dataToSave["timeOfPosting"] = Calendar.getInstance().time
+            dataToSave["status"] = "OPEN"
+            dataToSave["walkerId"] = ""
+
+
 
             dataToSave["latitude"] = latLng.latitude
             dataToSave["longitude"] = latLng.longitude

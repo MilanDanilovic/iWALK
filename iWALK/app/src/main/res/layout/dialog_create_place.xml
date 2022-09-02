@@ -47,6 +47,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dogPictureOneCreatePlace"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_littledogsquare"/>
+            app:srcCompat="@drawable/ic_littledogsquare" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/postTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:text="Time" />
+    <Button
+        android:id="@+id/pickTimeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Pick Time"/>
+    <TextView
+        android:id="@+id/postDatePickerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:text="Date" />
+    <Button
+        android:id="@+id/pickDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Pick Date"/>
+
 </LinearLayout>
