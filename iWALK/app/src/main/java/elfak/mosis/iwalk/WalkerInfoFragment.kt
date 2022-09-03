@@ -217,6 +217,15 @@ class WalkerInfoFragment : Fragment() {
             activity.supportFragmentManager.beginTransaction().replace(R.id.walker_info_fragment, personsPetsFragment).commit()
         })
 
+        sendMessage.setOnClickListener(View.OnClickListener {
+            val activity= context as AppCompatActivity
+            val messageForWalkerFragment = MessageForWalkerFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", walkerId)
+            messageForWalkerFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.walker_info_fragment, messageForWalkerFragment).commit()
+        })
+
     }
 
     override fun onCreateView(

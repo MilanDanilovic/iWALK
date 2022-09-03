@@ -43,6 +43,15 @@ class AdapterFavouriteWalkers(var ctx: Context, favouriteWalkersList: MutableLis
             walkerInfoFragment.setArguments(bundle)
             activity.supportFragmentManager.beginTransaction().replace(R.id.favourite_walkers_fragment, walkerInfoFragment).commit()
         })
+
+        favouriteWalkersHolder.sendMessage.setOnClickListener(View.OnClickListener { v ->
+            val activity= ctx as AppCompatActivity
+            val messageForWalkerFragment= MessageForWalkerFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", favouriteWalkersList[position].getWalkerId())
+            messageForWalkerFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.favourite_walkers_fragment, messageForWalkerFragment).commit()
+        })
     }
 
     override fun getItemCount(): Int {
