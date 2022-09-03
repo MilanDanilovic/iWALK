@@ -39,6 +39,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
@@ -53,6 +54,7 @@ import java.time.Month
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.*
+import kotlin.properties.Delegates
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -62,10 +64,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val latitude: Number? = null,
         val longitude: Number? = null,
         val name: String? = null,
-        val numberOfWalks: String? = null,
+        val numberOfWalks: Number? = null,
         val phone: String? = null,
         val profileImageUrl:String? = null,
-        val score:String? = null,
+        val score:Number? = null,
         val surname:String? = null,
         val username:String? = null
     )
@@ -92,6 +94,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val mapOptionsArray = arrayOf("Show users","Filter")
     private var arrayCheckedFilterDialog = booleanArrayOf(false,false)
     private val mapOptionsArrayFilterDialog = arrayOf("Score","Distance")
+    private val mapOptionsArrayFilterDialogScore = arrayOf("0","1","2","3","4")
+    private var scoreFilterValue = 0
     private var showUsersFlag = true
     private var radius = 500.00
     private var distanceFilter = false
@@ -199,74 +203,33 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                         for(user in listOfOtherUsers) {
                             if (user.latitude != null && user.longitude != null && showUsersFlag) {
-                                val markerOptions: MarkerOptions
                                 val userLatLng =
                                     LatLng(user.latitude as Double, user.longitude as Double)
-                                val urlToUserProfileImage = user.profileImageUrl
-                                val userMarker: Marker
-                                val userDescription = "Full name: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
-                                        "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
-                                //START distance section
-                                if(!distanceFilter) {
-                                    if (URLUtil.isValidUrl(urlToUserProfileImage)) {
-                                        val imageURL = URL(urlToUserProfileImage)
-                                        val connection: URLConnection = imageURL.openConnection()
-                                        val iconStream: InputStream = connection.getInputStream()
-                                        val bmp = BitmapFactory.decodeStream(iconStream)
-                                        val resizedBitmap = getResizedBitmap(bmp, 200)
-                                        val croppedBitmap = getCroppedBitmap(resizedBitmap)
 
-                                        markerOptions = MarkerOptions().position(userLatLng)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
-                                            .flat(true)
-                                            .anchor(0.5f, 0.5f)
-                                            .title("Username: " + user.username)
-                                            .snippet(userDescription)
-                                        userMarker = map.addMarker(markerOptions)!!
-                                        listOfOtherUsersMarkers.add(userMarker)
-
-                                    } else {
-                                        markerOptions = MarkerOptions().position(userLatLng)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
-                                            .flat(true)
-                                            .anchor(0.5f, 0.5f)
-                                            .title("Username: " + user.username)
-                                            .snippet(userDescription)
-                                        userMarker = map.addMarker(markerOptions)!!
-                                        listOfOtherUsersMarkers.add(userMarker)
-                                    }
+                                //START filter section
+                                if(!distanceFilter && !scoreFilter) { // no filter
+                                   checkIfImgUrlAndAddUserMarker(user)
                                 } else{
-                                    if(getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
-                                            ,userLatLng.latitude,userLatLng.longitude)<radius)
-                                    if (URLUtil.isValidUrl(urlToUserProfileImage)) {
-                                        val imageURL = URL(urlToUserProfileImage)
-                                        val connection: URLConnection = imageURL.openConnection()
-                                        val iconStream: InputStream = connection.getInputStream()
-                                        val bmp = BitmapFactory.decodeStream(iconStream)
-                                        val resizedBitmap = getResizedBitmap(bmp, 200)
-                                        val croppedBitmap = getCroppedBitmap(resizedBitmap)
-
-                                        markerOptions = MarkerOptions().position(userLatLng)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
-                                            .flat(true)
-                                            .anchor(0.5f, 0.5f)
-                                            .title("Username: " + user.username)
-                                            .snippet(userDescription)
-                                        userMarker = map.addMarker(markerOptions)!!
-                                        listOfOtherUsersMarkers.add(userMarker)
-
-                                    } else {
-                                        markerOptions = MarkerOptions().position(userLatLng)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
-                                            .flat(true)
-                                            .anchor(0.5f, 0.5f)
-                                            .title("Username: " + user.username)
-                                            .snippet(userDescription)
-                                        userMarker = map.addMarker(markerOptions)!!
-                                        listOfOtherUsersMarkers.add(userMarker)
+                                    if(distanceFilter && !scoreFilter){ //distance only
+                                        if(getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
+                                            ,userLatLng.latitude,userLatLng.longitude)<radius) {
+                                            checkIfImgUrlAndAddUserMarker(user)
+                                        }
+                                    } else{
+                                        if(!distanceFilter && scoreFilter){ //score only
+                                            if((user.score?.toDouble())!! >= scoreFilterValue.toDouble()){
+                                                checkIfImgUrlAndAddUserMarker(user)
+                                            }
+                                        } else{ //distance and score
+                                            if((user.score?.toDouble())!! >= scoreFilterValue && getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
+                                                    ,userLatLng.latitude,userLatLng.longitude)<radius)
+                                            {
+                                                checkIfImgUrlAndAddUserMarker(user)
+                                            }
+                                        }
                                     }
                                 }
-                                //END distance section
+                                //END filter section
 
                             }
                         }
@@ -274,6 +237,45 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+        }
+    }
+
+    fun checkIfImgUrlAndAddUserMarker(user:UserFromDatabase){
+        val markerOptions:MarkerOptions
+        val userMarker: Marker
+        val userDescription = "Full name: "+user.name +" "+user.surname+"\r\n"+"Email: "+user.email+
+                "\r\n"+"Number of walks: "+user.numberOfWalks+"\r\n"+"Score: "+user.score
+        val userLatLng =
+            LatLng(user.latitude as Double, user.longitude as Double)
+        val urlToUserProfileImage = user.profileImageUrl
+
+
+        if (URLUtil.isValidUrl(urlToUserProfileImage)) {
+            val imageURL = URL(urlToUserProfileImage)
+            val connection: URLConnection = imageURL.openConnection()
+            val iconStream: InputStream = connection.getInputStream()
+            val bmp = BitmapFactory.decodeStream(iconStream)
+            val resizedBitmap = getResizedBitmap(bmp, 200)
+            val croppedBitmap = getCroppedBitmap(resizedBitmap)
+
+            markerOptions = MarkerOptions().position(userLatLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(croppedBitmap))
+                .flat(true)
+                .anchor(0.5f, 0.5f)
+                .title("Username: " + user.username)
+                .snippet(userDescription)
+            userMarker = map.addMarker(markerOptions)!!
+            listOfOtherUsersMarkers.add(userMarker)
+
+        } else {
+            markerOptions = MarkerOptions().position(userLatLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_user))
+                .flat(true)
+                .anchor(0.5f, 0.5f)
+                .title("Username: " + user.username)
+                .snippet(userDescription)
+            userMarker = map.addMarker(markerOptions)!!
+            listOfOtherUsersMarkers.add(userMarker)
         }
     }
 
@@ -505,10 +507,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                 document.get("latitude") as Number?,
                                 document.get("longitude") as Number?,
                                 document.getString("name"),
-                                document.get("numberOfWalks").toString(),
+                                document.get("numberOfWalks") as Number,
                                 document.getString("phone"),
                                 document.getString("profileImageUrl"),
-                                document.get("score").toString(),
+                                document.get("score") as Number,
                                 document.getString("surname"),
                                 document.getString("username")
                             )
@@ -572,15 +574,27 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             lateinit var dialog:AlertDialog
             lateinit var dialogFilter: AlertDialog
+            lateinit var dialogScoreFilter: AlertDialog
 
             val builder = AlertDialog.Builder(requireContext())
             val builderFilter = AlertDialog.Builder(requireContext())
+            val builderScoreFilter = AlertDialog.Builder(requireContext())
+
+            builderScoreFilter.setTitle("Show users with score greater or equal than: ")
+            builderScoreFilter.setSingleChoiceItems(mapOptionsArrayFilterDialogScore,scoreFilterValue,null)
+            builderScoreFilter.setPositiveButton("OK") { dialogInterface, whichButton ->
+                    dialogInterface.dismiss()
+                    val selectedPosition = dialogScoreFilter.listView.checkedItemPosition
+                    scoreFilterValue = selectedPosition
+            }
+
+            builderScoreFilter.setNeutralButton("Cancel"){ _,_-> }
+            dialogScoreFilter = builderScoreFilter.create()
 
             builder.setTitle("Map options")
                 //.setCancelable(false)
             builder.setMultiChoiceItems(mapOptionsArray,arrayChecked) { dialog, which, isChecked ->
                 arrayChecked[which] = isChecked
-                val valueChecked = mapOptionsArray[which]
             }
 
             builder.setPositiveButton("OK") { _, _ ->
@@ -598,10 +612,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         if(mapOptionsArray[i] == showUsersString){
                             showUsersFlag = false
                         }else{
+                            scoreFilter = false
+                            distanceFilter = false
+                            scoreFilterValue=0
                             for(index in arrayCheckedFilterDialog.indices){
                                 arrayCheckedFilterDialog[index] = false
-                                scoreFilter = false
-                                distanceFilter = false
                             }
                         }
                     }
@@ -612,7 +627,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             builderFilter.setTitle("Filter users")
             builderFilter.setMultiChoiceItems(mapOptionsArrayFilterDialog,arrayCheckedFilterDialog) { dialogFilter, which, isChecked ->
                 arrayCheckedFilterDialog[which] = isChecked
-                val valueChecked = mapOptionsArrayFilterDialog[which]
             }
 
             builderFilter.setPositiveButton("OK") { _, _ ->
@@ -623,18 +637,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     if (checked) {
                         if(mapOptionsArrayFilterDialog[i] == scoreString){
                             scoreFilter = true
-                            Toast.makeText(requireContext(), "Score", Toast.LENGTH_SHORT).show()
+                            dialogScoreFilter.show()
                         }else{
                             distanceFilter = true
-//                            Toast.makeText(requireContext(), "Distance", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(requireContext(), "Distance filter enabled", Toast.LENGTH_SHORT).show()
                         }
                     }else{
                         if(mapOptionsArrayFilterDialog[i] == scoreString){
                             scoreFilter = false
-//                            Toast.makeText(requireContext(), "Remove score", Toast.LENGTH_SHORT).show()
+                            scoreFilterValue=0
+//                            Toast.makeText(requireContext(), "Remove score filter", Toast.LENGTH_SHORT).show()
                         }else{
                             distanceFilter = false
-//                            Toast.makeText(requireContext(), "Remove distance", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(requireContext(), "Remove distance filter", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
