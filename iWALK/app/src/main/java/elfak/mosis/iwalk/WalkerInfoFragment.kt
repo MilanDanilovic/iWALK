@@ -34,7 +34,7 @@ class WalkerInfoFragment : Fragment() {
     private lateinit var seePets : Button
 
     private lateinit var walkerId: String
-    private var check: String = ""
+    private var check: String = "no"
 
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
