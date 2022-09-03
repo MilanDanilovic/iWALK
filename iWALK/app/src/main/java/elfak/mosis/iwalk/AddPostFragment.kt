@@ -1,6 +1,8 @@
 package elfak.mosis.iwalk
 
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -22,6 +24,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddPostFragment : Fragment() {
@@ -29,8 +32,8 @@ class AddPostFragment : Fragment() {
     private lateinit var dogImage1 : ImageView
     private lateinit var dogImage2 : ImageView
     private lateinit var description : EditText
-    private lateinit var date : DatePicker
-    private lateinit var time : EditText
+    private lateinit var datePost : TextView
+    private lateinit var timePost : TextView
     private lateinit var auth: FirebaseAuth
     private lateinit var imageUri: Uri
     private lateinit var imageUri2: Uri
@@ -38,6 +41,14 @@ class AddPostFragment : Fragment() {
     private lateinit var imageUrl2 : String
     private val storage = FirebaseStorage.getInstance().reference
     private val docRef = FirebaseFirestore.getInstance()
+    private lateinit var pickDate : Button
+    private lateinit var pickTime : Button
+
+    //Calendar
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +62,35 @@ class AddPostFragment : Fragment() {
         dogImage1 = requireView().findViewById<ImageView>(R.id.dogPictureOne)
         dogImage2 = requireView().findViewById<ImageView>(R.id.dogPictureTwo)
         description = requireView().findViewById<EditText>(R.id.add_post_description_plain_text)
-        date = requireView().findViewById<DatePicker>(R.id.add_post_date_plain_text)
-        time = requireView().findViewById<EditText>(R.id.add_post_time_plain_text)
+        datePost = requireView().findViewById<TextView>(R.id.add_post_date)
+        timePost = requireView().findViewById<TextView>(R.id.add_post_time)
+        pickDate = requireView().findViewById<Button>(R.id.pick_date_post)
+        pickTime = requireView().findViewById<Button>(R.id.pick_time_post)
 
         val cancel: Button = requireView().findViewById<Button>(R.id.button_cancel_post)
         val save: Button = requireView().findViewById<Button>(R.id.button_add_post)
+
+        pickDate.setOnClickListener {
+            val dpd = DatePickerDialog( requireContext(),
+                DatePickerDialog.OnDateSetListener { view: DatePicker, mYear: Int, mMOnth: Int, mDay: Int ->
+                    val dateTextValue = "$mDay/${mMOnth+1}/$mYear"
+                    datePost.text= dateTextValue
+
+                },year,month,day)
+            dpd.show()
+        }
+
+        pickTime.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener{ _: TimePicker, hour:Int, minute:Int->
+                cal.set(Calendar.HOUR_OF_DAY,hour)
+                cal.set(Calendar.MINUTE,minute)
+
+                timePost.text = SimpleDateFormat("HH:mm").format(cal.time)
+            }
+            TimePickerDialog(requireContext(),timeSetListener,cal.get(Calendar.HOUR_OF_DAY),cal.get(
+                Calendar.MINUTE),true).show()
+        }
 
         cancel.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this.requireContext(), R.style.Theme_PopUpDialog)
@@ -110,11 +145,11 @@ class AddPostFragment : Fragment() {
                     dataToSave["description"] = description.text.toString()
                 }
 
-                dateForSaving = date.dayOfMonth.toString() + "." + (date.month + 1).toString() + "." + date.year.toString()
-                dataToSave["date"] = dateForSaving
-
-                if(!TextUtils.isEmpty(time.text.toString())) {
-                    dataToSave["time"] = time.text.toString()
+                if(!TextUtils.isEmpty(datePost.text.toString())) {
+                    dataToSave["date"] = datePost.text.toString()
+                }
+                if(!TextUtils.isEmpty(timePost.text.toString())) {
+                    dataToSave["time"] = timePost.text.toString()
                 }
                 if (query != null) {
                     dataToSave["userId"] = query
