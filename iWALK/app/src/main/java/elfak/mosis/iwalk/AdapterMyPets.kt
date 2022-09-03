@@ -59,7 +59,6 @@ class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
     }
 }
 
-//Ovo se menja :D
 class MyPetHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var petImage: ImageView
     var petName: TextView

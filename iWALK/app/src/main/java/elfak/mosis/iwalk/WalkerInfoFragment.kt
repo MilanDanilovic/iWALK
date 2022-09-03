@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
@@ -203,6 +206,15 @@ class WalkerInfoFragment : Fragment() {
                         }
                     }
             }
+        })
+
+        seePets.setOnClickListener(View.OnClickListener {
+            val activity= context as AppCompatActivity
+            val personsPetsFragment = PersonsPetsFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", walkerId)
+            personsPetsFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.walker_info_fragment, personsPetsFragment).commit()
         })
 
     }
