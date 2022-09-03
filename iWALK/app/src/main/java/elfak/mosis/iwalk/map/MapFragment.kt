@@ -505,10 +505,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                 document.get("latitude") as Number?,
                                 document.get("longitude") as Number?,
                                 document.getString("name"),
-                                document.getString("numberOfWalks"),
+                                document.get("numberOfWalks").toString(),
                                 document.getString("phone"),
                                 document.getString("profileImageUrl"),
-                                document.getString("score"),
+                                document.get("score").toString(),
                                 document.getString("surname"),
                                 document.getString("username")
                             )
