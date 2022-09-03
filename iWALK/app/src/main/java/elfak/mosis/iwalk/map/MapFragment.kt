@@ -33,28 +33,23 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import elfak.mosis.iwalk.R
 import elfak.mosis.iwalk.databinding.FragmentMapBinding
 import kotlinx.coroutines.*
-import org.w3c.dom.Text
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
 import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.*
-import kotlin.properties.Delegates
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -83,6 +78,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val desiredWalkTime: String?=null
     )
     var listOfOtherUsers:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
+    var listOfFriends:MutableList<UserFromDatabase> = mutableListOf<UserFromDatabase>()
+
 
     private var returnValue:Boolean=true
     private var _binding: FragmentMapBinding? = null
@@ -90,8 +87,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var auth: FirebaseAuth =  Firebase.auth
 	private var postMarkers: MutableList<Marker> = mutableListOf()
     private lateinit var mapOptions : ImageView
-    private val arrayChecked = booleanArrayOf(true,false)
-    private val mapOptionsArray = arrayOf("Show users","Filter")
+    private val arrayChecked = booleanArrayOf(true,false,false)
+    private val mapOptionsArray = arrayOf("Show all users","Show friends","Filter")
     private var arrayCheckedFilterDialog = booleanArrayOf(false,false)
     private val mapOptionsArrayFilterDialog = arrayOf("Score","Distance")
     private val mapOptionsArrayFilterDialogScore = arrayOf("0","1","2","3","4")
@@ -100,6 +97,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var radius = 500.00
     private var distanceFilter = false
     private var scoreFilter = false
+    private var friendsFilter = false
 
     private var isCameraInitiallySet: Boolean = false
     private lateinit var map: GoogleMap
@@ -201,36 +199,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             listOfOtherUsersMarkers.removeAll(valuesMarkesToRemove)
                         }
 
-                        for(user in listOfOtherUsers) {
-                            if (user.latitude != null && user.longitude != null && showUsersFlag) {
-                                val userLatLng =
-                                    LatLng(user.latitude as Double, user.longitude as Double)
+                        if(showUsersFlag) {
+                            for (user in listOfOtherUsers) {
+                                if (user.latitude != null && user.longitude != null) { //show all users
+                                    val userLatLng =
+                                        LatLng(user.latitude as Double, user.longitude as Double)
 
-                                //START filter section
-                                if(!distanceFilter && !scoreFilter) { // no filter
-                                   checkIfImgUrlAndAddUserMarker(user)
-                                } else{
-                                    if(distanceFilter && !scoreFilter){ //distance only
-                                        if(getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
-                                            ,userLatLng.latitude,userLatLng.longitude)<radius) {
-                                            checkIfImgUrlAndAddUserMarker(user)
-                                        }
-                                    } else{
-                                        if(!distanceFilter && scoreFilter){ //score only
-                                            if((user.score?.toDouble())!! >= scoreFilterValue.toDouble()){
-                                                checkIfImgUrlAndAddUserMarker(user)
-                                            }
-                                        } else{ //distance and score
-                                            if((user.score?.toDouble())!! >= scoreFilterValue && getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
-                                                    ,userLatLng.latitude,userLatLng.longitude)<radius)
-                                            {
-                                                checkIfImgUrlAndAddUserMarker(user)
-                                            }
-                                        }
+                                    filterUsers(user, userLatLng)
+                                }
+                            }
+                        } else{
+                            if(friendsFilter) {
+                                getAllFriends()
+                                for (user in listOfFriends) {
+                                    if (user.latitude != null && user.longitude != null) { //show all users
+                                        val userLatLng =
+                                            LatLng(
+                                                user.latitude as Double,
+                                                user.longitude as Double
+                                            )
+
+                                        filterUsers(user, userLatLng)
                                     }
                                 }
-                                //END filter section
-
                             }
                         }
 
@@ -238,6 +229,78 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    fun filterUsers(user:UserFromDatabase, userLatLng:LatLng){
+        //START filter section
+        if(!distanceFilter && !scoreFilter) { // no filter
+            checkIfImgUrlAndAddUserMarker(user)
+        } else{
+            if(distanceFilter && !scoreFilter){ //distance only
+                if(getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
+                        ,userLatLng.latitude,userLatLng.longitude)<radius) {
+                    checkIfImgUrlAndAddUserMarker(user)
+                }
+            } else{
+                if(!distanceFilter && scoreFilter){ //score only
+                    if((user.score?.toDouble())!! >= scoreFilterValue.toDouble()){
+                        checkIfImgUrlAndAddUserMarker(user)
+                    }
+                } else{ //distance and score
+                    if((user.score?.toDouble())!! >= scoreFilterValue && getDistance(currentUserMarker!!.position.latitude, currentUserMarker!!.position.longitude
+                            ,userLatLng.latitude,userLatLng.longitude)<radius)
+                    {
+                        checkIfImgUrlAndAddUserMarker(user)
+                    }
+                }
+            }
+        }
+        //END filter section
+    }
+
+    fun getAllFriends() {
+        val documentReference = docRef.collection("users")
+        val friendsRef: CollectionReference = docRef.collection("users")
+
+        documentReference.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    listOfOtherUsers.removeAll(listOfOtherUsers)
+                    for (document in task.result) {
+                        if (document.id == auth.currentUser?.uid) {
+                            if (document["friends"] != null) {
+                                var friendsList = arrayListOf<String>()
+                                friendsList = document["friends"] as ArrayList<String>
+
+                                friendsRef.get()
+                                    .addOnCompleteListener { taskFriends ->
+                                        if (taskFriends.isSuccessful) {
+                                            for (documentFriend in taskFriends.result) {
+                                                if (friendsList.contains(documentFriend.id)) {
+                                                    val friendFromDatabase = UserFromDatabase(
+                                                        documentFriend.getString("email"),
+                                                        documentFriend.get("latitude") as Number?,
+                                                        documentFriend.get("longitude") as Number?,
+                                                        documentFriend.getString("name"),
+                                                        documentFriend.get("numberOfWalks") as Number,
+                                                        documentFriend.getString("phone"),
+                                                        documentFriend.getString("profileImageUrl"),
+                                                        documentFriend.get("score") as Number,
+                                                        documentFriend.getString("surname"),
+                                                        documentFriend.getString("username")
+                                                    )
+                                                    listOfFriends.add(friendFromDatabase)
+                                                }
+                                            }
+                                        } else {
+                                            Log.d("TAG", "Error getting documents: ", task.exception)
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
     }
 
     fun checkIfImgUrlAndAddUserMarker(user:UserFromDatabase){
@@ -601,22 +664,32 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 // Do something when click positive button
                 for (i in mapOptionsArray.indices) {
                     val checked = arrayChecked[i]
-                    val showUsersString = "Show users"
+                    val showUsersString = "Show all users"
+                    val showFriendsString = "Show friends"
                     if (checked) {
                         if(mapOptionsArray[i] == showUsersString){
                             showUsersFlag = true
-                        }else{
-                            dialogFilter.show()
+                        } else {
+                            if(mapOptionsArray[i] == showFriendsString){
+                                friendsFilter = true
+                            }
+                            else{
+                                dialogFilter.show()
+                            }
                         }
                     }else{
                         if(mapOptionsArray[i] == showUsersString){
                             showUsersFlag = false
-                        }else{
-                            scoreFilter = false
-                            distanceFilter = false
-                            scoreFilterValue=0
-                            for(index in arrayCheckedFilterDialog.indices){
-                                arrayCheckedFilterDialog[index] = false
+                        }else {
+                            if (mapOptionsArray[i] == showFriendsString) {
+                                friendsFilter = false
+                            } else {
+                                scoreFilter = false
+                                distanceFilter = false
+                                scoreFilterValue = 0
+                                for (index in arrayCheckedFilterDialog.indices) {
+                                    arrayCheckedFilterDialog[index] = false
+                                }
                             }
                         }
                     }
