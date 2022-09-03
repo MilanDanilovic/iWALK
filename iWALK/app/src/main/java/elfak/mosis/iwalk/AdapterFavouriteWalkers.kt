@@ -1,11 +1,14 @@
 package elfak.mosis.iwalk
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,6 +34,15 @@ class AdapterFavouriteWalkers(var ctx: Context, favouriteWalkersList: MutableLis
             .into(favouriteWalkersHolder.image)
 
         baseAuth = FirebaseAuth.getInstance()
+
+        favouriteWalkersHolder.layout.setOnClickListener(View.OnClickListener { v ->
+            val activity= ctx as AppCompatActivity
+            val walkerInfoFragment= WalkerInfoFragment()
+            val bundle = Bundle()
+            bundle.putString("user_id", favouriteWalkersList[position].getWalkerId())
+            walkerInfoFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction().replace(R.id.favourite_walkers_fragment, walkerInfoFragment).commit()
+        })
     }
 
     override fun getItemCount(): Int {
@@ -46,10 +58,12 @@ class FavouriteWalkersHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     var image: CircleImageView
     var username: TextView
     var sendMessage: ImageView
+    var layout: LinearLayout
 
     init {
         image = itemView.findViewById(R.id.favourite_walker_profile_picture)
         username = itemView.findViewById(R.id.favourite_walker_username_value)
         sendMessage = itemView.findViewById(R.id.walkers_send_message)
+        layout = itemView.findViewById(R.id.custom_grid_walkers_favourite)
     }
 }

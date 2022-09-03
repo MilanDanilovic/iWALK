@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout_walkers_favourite"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:background="#001419"
         app:cardElevation="3dp"
@@ -18,9 +18,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/favourite_walker_profile_picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/ic_user"
             app:layout_constraintHorizontal_bias="0.02"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,7 @@
             android:id="@+id/favourite_walker_username_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="32dp"
             android:text="username"
             android:textColor="#FFFFFF"
@@ -42,10 +43,11 @@
             android:id="@+id/walkers_send_message"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="130dp"
+            android:layout_marginStart="100dp"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toEndOf="@+id/favourite_walker_username_value"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_send_message" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

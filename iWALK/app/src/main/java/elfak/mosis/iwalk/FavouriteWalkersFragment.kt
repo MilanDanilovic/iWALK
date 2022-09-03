@@ -33,6 +33,7 @@ class FavouriteWalkersFragment : Fragment() {
         favouriteWalkersList = ArrayList<FavouriteWalker>()
         auth = Firebase.auth
         val usersRef: CollectionReference = docRef.collection("users")
+        val friendsRef: CollectionReference = docRef.collection("users")
         recyclerView = view.findViewById<View>(R.id.favourite_walkers_recycler) as RecyclerView
 
         usersRef.get()
@@ -43,22 +44,31 @@ class FavouriteWalkersFragment : Fragment() {
                             if (document["favourites"] != null) {
                                 var favourites = arrayListOf<String>()
                                 favourites = document["favourites"] as ArrayList<String>
-                                for (friend in favourites) {
 
-                                    /*val gridLayoutManager = GridLayoutManager(context, 1)
-                                    recyclerView!!.setLayoutManager(gridLayoutManager)
-                                    favouriteWalkers = FavouriteWalker(
-                                        document.id,
-                                        document.getString("username"),
-                                        document.getString("profileImageUrl")
-                                    )
-                                    friendsList!!.add(friend!!)
-                                    adapterAllFriends = context?.let { AdapterFriendAll(it, friendsList!!) }
-                                    recyclerView!!.setAdapter(adapterAllFriends)*/
-                                }
+                                friendsRef.get()
+                                    .addOnCompleteListener { taskFriends ->
+                                        if (taskFriends.isSuccessful) {
+                                            for (documentFriend in taskFriends.result) {
+                                                if (favourites.contains(documentFriend.id)) {
+                                                    val gridLayoutManager = GridLayoutManager(context, 1)
+                                                    recyclerView!!.setLayoutManager(gridLayoutManager)
+                                                    favouriteWalkers = FavouriteWalker(
+                                                        documentFriend.getString("profileImageUrl"),
+                                                        documentFriend.getString("username"),
+                                                        documentFriend.id,
+                                                    )
+                                                    favouriteWalkersList!!.add(favouriteWalkers!!)
+                                                    adapterFavouriteWalkers = context?.let { AdapterFavouriteWalkers(it, favouriteWalkersList!!) }
+                                                    recyclerView!!.setAdapter(adapterFavouriteWalkers)
+                                                }
+                                            }
+                                        } else {
+                                            Log.d("TAG", "Error getting documents: ", task.exception)
+                                        }
+                                    }
                             }
-
                         }
+
                     }
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.exception)
