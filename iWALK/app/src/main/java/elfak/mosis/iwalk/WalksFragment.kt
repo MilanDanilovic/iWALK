@@ -41,6 +41,7 @@ class WalksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val myWalks: TextView = requireView().findViewById<TextView>(R.id.my_walks_tab_walks)
+        val mapWalks: TextView = requireView().findViewById<TextView>(R.id.map_walks_tab_walks)
 
         walksInProgressList = ArrayList<Walks>()
         walksFinishedList = ArrayList<Walks>()
@@ -112,6 +113,15 @@ class WalksFragment : Fragment() {
 
         myWalks.setOnClickListener(View.OnClickListener {
             val fragment: Fragment = MyWalksFragment()
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.walks_fragment, fragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        })
+
+        mapWalks.setOnClickListener(View.OnClickListener {
+            val fragment: Fragment = MapWalksFragment()
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.walks_fragment, fragment)

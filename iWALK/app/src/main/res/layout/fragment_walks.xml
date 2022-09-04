@@ -23,24 +23,33 @@
 
             <TextView
                 android:id="@+id/walks_tab_walks"
-                android:layout_width="180dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="Walks"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:textSize="22sp"
+                android:layout_marginTop="15dp"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold">
             </TextView>
 
             <TextView
                 android:id="@+id/my_walks_tab_walks"
-                android:layout_width="180dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:text="My walks"
-                android:textSize="22sp"
+                android:textSize="18sp"
+                android:textColor="#1CA1BF"/>
+            <TextView
+                android:id="@+id/map_walks_tab_walks"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Map walks"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:textSize="18sp"
                 android:textColor="#1CA1BF"/>
 
         </LinearLayout>
