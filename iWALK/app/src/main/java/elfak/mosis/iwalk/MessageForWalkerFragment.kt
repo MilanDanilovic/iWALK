@@ -23,7 +23,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -119,13 +118,12 @@ class MessageForWalkerFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to cancel message?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-
-                /*val fragment: Fragment = HomeFragment()
+                val fragment: Fragment = HomeFragment()
                 val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.message_for_walker_fragment, fragment)
                 fragmentTransaction.addToBackStack(null)
-                fragmentTransaction.commit()*/
+                fragmentTransaction.commit()
             })
             alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
             alertDialog.show()
@@ -141,8 +139,6 @@ class MessageForWalkerFragment : Fragment() {
 
                 val dataToSave: MutableMap<String, Any> =
                     HashMap()
-
-                val dateForSaving : String
 
                 if(!TextUtils.isEmpty(descriptionMessage.text.toString())) {
                     dataToSave["description"] = descriptionMessage.text.toString()
@@ -183,14 +179,14 @@ class MessageForWalkerFragment : Fragment() {
                     fragmentTransaction.commit()
                     Toast.makeText(
                         context,
-                        "messages is saved in database!",
+                        "Message sent!",
                         Toast.LENGTH_LONG
                     )
                         .show()
                 }.addOnFailureListener { e ->
                     Toast.makeText(
                         context,
-                        "messages is not saved! Try again! ",
+                        "Messages is not sent! Try again! ",
                         Toast.LENGTH_LONG
                     ).show()
                     Log.w("TAG", "messages is not saved in database! ", e)

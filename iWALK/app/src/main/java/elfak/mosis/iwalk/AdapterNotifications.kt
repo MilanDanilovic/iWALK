@@ -2,21 +2,17 @@ package elfak.mosis.iwalk
 
 import android.content.Context
 import android.content.DialogInterface
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,10 +36,14 @@ class AdapterNotifications(var ctx: Context, notificationsList: MutableList<Noti
         notificationHolder.description.setText(notificationsList[position].getDescription())
         notificationHolder.date.setText(notificationsList[position].getDate())
         notificationHolder.time.setText(notificationsList[position].getTime())
-        Picasso.get().load(notificationsList[position].getDogImage1())
-            .into(notificationHolder.dogPic1)
-        Picasso.get().load(notificationsList[position].getDogImage2())
-            .into(notificationHolder.dogPic2)
+        if (URLUtil.isValidUrl(notificationsList[position].getDogImage1())) {
+            Picasso.get().load(notificationsList[position].getDogImage1())
+                .into(notificationHolder.dogPic1)
+        }
+        if (URLUtil.isValidUrl(notificationsList[position].getDogImage2())) {
+            Picasso.get().load(notificationsList[position].getDogImage2())
+                .into(notificationHolder.dogPic2)
+        }
 
         baseAuth = FirebaseAuth.getInstance()
 
@@ -118,13 +118,8 @@ class AdapterNotifications(var ctx: Context, notificationsList: MutableList<Noti
                                                         val activity= ctx as AppCompatActivity
                                                         val notifiactionsFragment= NotifiactionsFragment()
                                                         activity.supportFragmentManager.beginTransaction().replace(R.id.notifications_fragment, notifiactionsFragment).commit()
-                                                        Toast.makeText(v.context, "Friend request is deleted!", Toast.LENGTH_LONG).show()
                                                     } else {
-                                                        Toast.makeText(
-                                                            v.context,
-                                                            "Error deleting post!",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
+
                                                         Log.w(
                                                             "TAG",
                                                             "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -136,14 +131,14 @@ class AdapterNotifications(var ctx: Context, notificationsList: MutableList<Noti
 
                                             Toast.makeText(
                                                 ctx,
-                                                "Post is saved in database!",
+                                                "Notification accepted!",
                                                 Toast.LENGTH_LONG
                                             )
                                                 .show()
                                         }.addOnFailureListener { e ->
                                             Toast.makeText(
                                                 ctx,
-                                                "Post is not saved! Try again! ",
+                                                "Error accepting notification!",
                                                 Toast.LENGTH_LONG
                                             ).show()
                                             Log.w("TAG", "Post is not saved in database! ", e)
@@ -196,13 +191,7 @@ class AdapterNotifications(var ctx: Context, notificationsList: MutableList<Noti
                                 val activity= ctx as AppCompatActivity
                                 val notifiactionsFragment= NotifiactionsFragment()
                                 activity.supportFragmentManager.beginTransaction().replace(R.id.notifications_fragment, notifiactionsFragment).commit()
-                                Toast.makeText(v.context, "Friend request is deleted!", Toast.LENGTH_LONG).show()
                             } else {
-                                Toast.makeText(
-                                    v.context,
-                                    "Error deleting post!",
-                                    Toast.LENGTH_LONG
-                                ).show()
                                 Log.w(
                                     "TAG",
                                     "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"

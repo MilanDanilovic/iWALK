@@ -34,6 +34,26 @@ class Walks {
         this.postWalkerId = postWalkerId
     }
 
+    constructor(
+        postId: String?,
+        postDescription: String?,
+        postDate: String?,
+        postTime: String?,
+        postUserId: String?,
+        postDogImage1: String?,
+        postStatus: String?,
+        postWalkerId: String?
+    ) {
+        this.postId = postId
+        this.postDescription = postDescription
+        this.postDate = postDate
+        this.postTime = postTime
+        this.postUserId = postUserId
+        this.postDogImage1 = postDogImage1
+        this.postStatus = postStatus
+        this.postWalkerId = postWalkerId
+    }
+
     fun getPostId(): String? {
         return postId
     }

@@ -20,39 +20,35 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
-class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) :
-    RecyclerView.Adapter<InProgressMyWalksHolder>() {
+class AdapterMapMyWalks(var ctx: Context, walksList: MutableList<Walks>) :
+    RecyclerView.Adapter<MapMyWalksHolder>() {
 
     lateinit var walksList: MutableList<Walks>
     var baseAuth: FirebaseAuth? = null
     private val docRef = FirebaseFirestore.getInstance()
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): InProgressMyWalksHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MapMyWalksHolder {
         val mView: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.custom_grid_in_progress_my_walks, viewGroup, false)
-        return InProgressMyWalksHolder(mView)
+            .inflate(R.layout.custom_grid_map_my_walks, viewGroup, false)
+        return MapMyWalksHolder(mView)
     }
 
-    override fun onBindViewHolder(inProgressMyWalksHolder: InProgressMyWalksHolder, position: Int) {
-        inProgressMyWalksHolder.postDescription.setText(walksList[position].getPostDescription())
-        inProgressMyWalksHolder.postDate.setText(walksList[position].getPostDate())
-        inProgressMyWalksHolder.postTime.setText(walksList[position].getPostTime())
+    override fun onBindViewHolder(mapMyWalksHolder: MapMyWalksHolder, position: Int) {
+        mapMyWalksHolder.postDescription.setText(walksList[position].getPostDescription())
+        mapMyWalksHolder.postDate.setText(walksList[position].getPostDate())
+        mapMyWalksHolder.postTime.setText(walksList[position].getPostTime())
         if (URLUtil.isValidUrl(walksList[position].getPostDogImage1())) {
             Picasso.get().load(walksList[position].getPostDogImage1())
-                .into(inProgressMyWalksHolder.postDogImage1)
-        }
-        if (URLUtil.isValidUrl(walksList[position].getPostDogImage2())) {
-            Picasso.get().load(walksList[position].getPostDogImage2())
-                .into(inProgressMyWalksHolder.postDogImage2)
+                .into(mapMyWalksHolder.postDogImage1)
         }
 
-        inProgressMyWalksHolder.cancel.setOnClickListener(View.OnClickListener { v ->
+        mapMyWalksHolder.cancel.setOnClickListener(View.OnClickListener { v ->
             val alertDialog = AlertDialog.Builder(ctx, R.style.Theme_PopUpDialog)
             alertDialog.setMessage("Are you sure you want to cancel this walk?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
 
-                val documentReference = walksList.get(inProgressMyWalksHolder.adapterPosition).getPostId()?.let { it -> docRef.collection("posts").document(it) }
+                val documentReference = walksList.get(mapMyWalksHolder.adapterPosition).getPostId()?.let { it -> docRef.collection("markers").document(it) }
 
                 documentReference?.update(
                     "status", "OPEN",
@@ -60,11 +56,11 @@ class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) 
                 )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
                     if (task.isSuccessful) {
 
-                        val fragment: Fragment = MyWalksFragment()
+                        val fragment: Fragment = MapWalksFragment()
                         val fragmentManager = (ctx as FragmentActivity).supportFragmentManager
                         val fragmentTransaction = fragmentManager.beginTransaction()
                         fragmentTransaction.replace(
-                            R.id.my_walks_fragment,
+                            R.id.map_walks_fragment,
                             fragment
                         )
                         fragmentTransaction.addToBackStack(
@@ -101,20 +97,18 @@ class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) 
     }
 }
 
-class InProgressMyWalksHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class MapMyWalksHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var postDescription: TextView
     var postDate: TextView
     var postTime: TextView
     var postDogImage1: ImageView
-    var postDogImage2: ImageView
     var cancel: Button
 
     init {
-        postDescription = itemView.findViewById(R.id.my_in_progress_walks_description_value)
-        postDate = itemView.findViewById(R.id.my_in_progress_walks_date_value)
-        postTime = itemView.findViewById(R.id.my_in_progress_walks_time_value)
-        postDogImage1 = itemView.findViewById(R.id.my_in_progress_walks_dog1_pictue_value)
-        postDogImage2 = itemView.findViewById(R.id.my_in_progress_walks_dog2_picture_value)
-        cancel = itemView.findViewById(R.id.my_in_progress_walks_cancel_button)
+        postDescription = itemView.findViewById(R.id.my_map_walks_description_value)
+        postDate = itemView.findViewById(R.id.my_map_walks_date_value)
+        postTime = itemView.findViewById(R.id.my_map_walks_time_value)
+        postDogImage1 = itemView.findViewById(R.id.my_map_walks_dog1_pictue_value)
+        cancel = itemView.findViewById(R.id.my_map_walks_cancel_button)
     }
 }

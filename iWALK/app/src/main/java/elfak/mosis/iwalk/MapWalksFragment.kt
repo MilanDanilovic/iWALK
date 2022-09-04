@@ -17,21 +17,21 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
-class MyWalksFragment : Fragment() {
+class MapWalksFragment : Fragment() {
 
-    var adapterInProgressMyWalks: AdapterInProgressMyWalks? = null
+    var adapterInProgressMyWalks: AdapterMapMyWalks? = null
     private val docRef = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
-    var recyclerViewInProgress: RecyclerView? = null
+    var recyclerViewInProgressMyWalks: RecyclerView? = null
     var myWalksInProgress: Walks? = null
     var myWalksInProgressList: ArrayList<Walks>? = null
 
-    var adapterFinishedMyWalks: AdapterFinishedMyWalks? = null
-    var recyclerViewFinished: RecyclerView? = null
-    var myWalksFinished: Walks? = null
-    var myWalksFinishedList: ArrayList<Walks>? = null
+    var adapterInProgressWalks: AdapterMapWalks? = null
+    var recyclerViewInProgressWalks: RecyclerView? = null
+    var walksInProgress: Walks? = null
+    var walksInProgressList: ArrayList<Walks>? = null
 
-    private val postsRef = docRef.collection("posts")
+    private val markersRef = docRef.collection("markers")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,21 +40,21 @@ class MyWalksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val walks: TextView = requireView().findViewById<TextView>(R.id.walks_tab_my_walks)
-        val mapWalks: TextView = requireView().findViewById<TextView>(R.id.map_walks_tab_my_walks)
+        val walks: TextView = requireView().findViewById<TextView>(R.id.walks_tab_map_walks)
+        val myWalks: TextView = requireView().findViewById<TextView>(R.id.my_walks_tab_map_walks)
 
         myWalksInProgressList = ArrayList<Walks>()
-        myWalksFinishedList = ArrayList<Walks>()
+        walksInProgressList = ArrayList<Walks>()
         auth = Firebase.auth
 
-        recyclerViewInProgress = view.findViewById<View>(R.id.active_my_walks_recycler) as RecyclerView
-        postsRef.get()
+        recyclerViewInProgressMyWalks = view.findViewById<View>(R.id.my_walks_map_walks_recycler) as RecyclerView
+        markersRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
                         if (document.getString("walkerId") == auth.currentUser?.uid && document.getString("status") == "IN_PROGRESS") {
                             val gridLayoutManager = GridLayoutManager(context, 1)
-                            recyclerViewInProgress!!.setLayoutManager(gridLayoutManager)
+                            recyclerViewInProgressMyWalks!!.setLayoutManager(gridLayoutManager)
                             myWalksInProgress = Walks(
                                 document.id,
                                 document.getString("description"),
@@ -62,13 +62,12 @@ class MyWalksFragment : Fragment() {
                                 document.getString("time"),
                                 document.getString("userId"),
                                 document.getString("dogImage1Url"),
-                                document.getString("dogImage2Url"),
                                 document.getString("status"),
                                 document.getString("walkerId")
                             )
                             myWalksInProgressList!!.add(myWalksInProgress!!)
-                            adapterInProgressMyWalks = context?.let { AdapterInProgressMyWalks(it, myWalksInProgressList!!) }
-                            recyclerViewInProgress!!.setAdapter(adapterInProgressMyWalks)
+                            adapterInProgressMyWalks = context?.let { AdapterMapMyWalks(it, myWalksInProgressList!!) }
+                            recyclerViewInProgressMyWalks!!.setAdapter(adapterInProgressMyWalks)
                         }
                     }
                 } else {
@@ -76,34 +75,33 @@ class MyWalksFragment : Fragment() {
                 }
             }.addOnFailureListener { e ->
                 Toast.makeText(
-                    this@MyWalksFragment.context,
+                    this@MapWalksFragment.context,
                     "Error:" + e,
                     Toast.LENGTH_SHORT
                 ).show()
             }
 
-        recyclerViewFinished = view.findViewById<View>(R.id.old_my_walks_recycler) as RecyclerView
-        postsRef.get()
+        recyclerViewInProgressWalks = view.findViewById<View>(R.id.walks_map_walks_recycler) as RecyclerView
+        markersRef.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        if (document.getString("walkerId") == auth.currentUser?.uid && document.getString("status") == "FINISHED") {
+                        if (document.getString("userId") == auth.currentUser?.uid && document.getString("status") == "IN_PROGRESS") {
                             val gridLayoutManager = GridLayoutManager(context, 1)
-                            recyclerViewFinished!!.setLayoutManager(gridLayoutManager)
-                            myWalksFinished = Walks(
+                            recyclerViewInProgressWalks!!.setLayoutManager(gridLayoutManager)
+                            walksInProgress = Walks(
                                 document.id,
                                 document.getString("description"),
                                 document.getString("date"),
                                 document.getString("time"),
                                 document.getString("userId"),
                                 document.getString("dogImage1Url"),
-                                document.getString("dogImage2Url"),
                                 document.getString("status"),
                                 document.getString("walkerId")
                             )
-                            myWalksFinishedList!!.add(myWalksFinished!!)
-                            adapterFinishedMyWalks = context?.let { AdapterFinishedMyWalks(it, myWalksFinishedList!!) }
-                            recyclerViewFinished!!.setAdapter(adapterFinishedMyWalks)
+                            walksInProgressList!!.add(walksInProgress!!)
+                            adapterInProgressWalks = context?.let { AdapterMapWalks(it, walksInProgressList!!) }
+                            recyclerViewInProgressWalks!!.setAdapter(adapterInProgressWalks)
                         }
                     }
                 } else {
@@ -115,16 +113,16 @@ class MyWalksFragment : Fragment() {
             val fragment: Fragment = WalksFragment()
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.my_walks_fragment, fragment)
+            fragmentTransaction.replace(R.id.map_walks_fragment, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         })
 
-        mapWalks.setOnClickListener(View.OnClickListener {
-            val fragment: Fragment = MapWalksFragment()
+        myWalks.setOnClickListener(View.OnClickListener {
+            val fragment: Fragment = MyWalksFragment()
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.my_walks_fragment, fragment)
+            fragmentTransaction.replace(R.id.map_walks_fragment, fragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         })
@@ -135,7 +133,7 @@ class MyWalksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_walks, container, false)
+        return inflater.inflate(R.layout.fragment_map_walks, container, false)
     }
 
     override fun onDestroyView() {

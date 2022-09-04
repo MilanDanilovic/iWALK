@@ -2,12 +2,11 @@ package elfak.mosis.iwalk
 
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -38,10 +37,14 @@ class AdapterMyPosts(var ctx: Context, postsList: MutableList<Post>) :
         myPostHolder.postDescription.setText(postsList[position].getPostDescription())
         myPostHolder.postDate.setText(postsList[position].getPostDate())
         myPostHolder.postTime.setText(postsList[position].getPostTime())
-        Picasso.get().load(postsList[position].getPostDogImage1())
-            .into(myPostHolder.postDogImage1)
-        Picasso.get().load(postsList[position].getPostDogImage2())
-            .into(myPostHolder.postDogImage2)
+        if (URLUtil.isValidUrl(postsList[position].getPostDogImage1())) {
+            Picasso.get().load(postsList[position].getPostDogImage1())
+                .into(myPostHolder.postDogImage1)
+        }
+        if (URLUtil.isValidUrl(postsList[position].getPostDogImage2())) {
+            Picasso.get().load(postsList[position].getPostDogImage2())
+                .into(myPostHolder.postDogImage2)
+        }
 
         baseAuth = FirebaseAuth.getInstance()
 

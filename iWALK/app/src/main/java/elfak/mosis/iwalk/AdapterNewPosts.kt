@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -32,10 +33,14 @@ class AdapterNewPosts(var ctx: Context, postsList: MutableList<Post>) :
     override fun onBindViewHolder(newPostHolder: NewPostHolder, position: Int) {
         val postText: String = postsList[position].getPostDescription() + "\n" + postsList[position].getPostDate() + " " + postsList[position].getPostTime()
         newPostHolder.postDescription.setText(postText)
-        Picasso.get().load(postsList[position].getPostDogImage1())
-            .into(newPostHolder.postDogImage1)
-        Picasso.get().load(postsList[position].getPostDogImage2())
-            .into(newPostHolder.postDogImage2)
+        if (URLUtil.isValidUrl(postsList[position].getPostDogImage1())) {
+            Picasso.get().load(postsList[position].getPostDogImage1())
+                .into(newPostHolder.postDogImage1)
+        }
+        if (URLUtil.isValidUrl(postsList[position].getPostDogImage2())) {
+            Picasso.get().load(postsList[position].getPostDogImage2())
+                .into(newPostHolder.postDogImage2)
+        }
 
         baseAuth = FirebaseAuth.getInstance()
 
@@ -61,13 +66,13 @@ class AdapterNewPosts(var ctx: Context, postsList: MutableList<Post>) :
                         fragmentTransaction.commit()
                         Toast.makeText(
                             ctx,
-                            "Data successfully updated.",
+                            "Post accepted!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             ctx,
-                            "Error updating data.",
+                            "Error accepting post!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

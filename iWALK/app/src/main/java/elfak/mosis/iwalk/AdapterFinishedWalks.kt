@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -29,10 +29,14 @@ class AdapterFinishedWalks(var ctx: Context, walksList: MutableList<Walks>) :
     override fun onBindViewHolder(finishedWalksHolder: FinishedWalksHolder, position: Int) {
         finishedWalksHolder.postDate.setText(walksList[position].getPostDate())
         finishedWalksHolder.postTime.setText(walksList[position].getPostTime())
-        Picasso.get().load(walksList[position].getPostDogImage1())
-            .into(finishedWalksHolder.postDogImage1)
-        Picasso.get().load(walksList[position].getPostDogImage2())
-            .into(finishedWalksHolder.postDogImage2)
+        if (URLUtil.isValidUrl(walksList[position].getPostDogImage1())) {
+            Picasso.get().load(walksList[position].getPostDogImage1())
+                .into(finishedWalksHolder.postDogImage1)
+        }
+        if (URLUtil.isValidUrl(walksList[position].getPostDogImage2())) {
+            Picasso.get().load(walksList[position].getPostDogImage2())
+                .into(finishedWalksHolder.postDogImage2)
+        }
 
         walksList.get(finishedWalksHolder.adapterPosition).getPostWalkerId()?.let {
             docRef.collection("users")
