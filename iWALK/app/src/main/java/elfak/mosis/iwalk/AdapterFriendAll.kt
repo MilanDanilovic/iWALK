@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -39,8 +40,10 @@ class AdapterFriendAll (var ctx: Context, allFriendsList: MutableList<Friend>) :
 
     override fun onBindViewHolder(allFriendsHolder: AllFriendsHolder, position: Int) {
         allFriendsHolder.friendUsername.setText(allFriendsList[position].getFriendUsername())
-        Picasso.get().load(allFriendsList[position].getFriendImage())
-            .into(allFriendsHolder.friendImage)
+        if (URLUtil.isValidUrl(allFriendsList[position].getFriendImage())) {
+            Picasso.get().load(allFriendsList[position].getFriendImage())
+                .into(allFriendsHolder.friendImage)
+        }
         baseAuth = FirebaseAuth.getInstance()
 
         allFriendsHolder.layout.setOnClickListener(View.OnClickListener { v ->

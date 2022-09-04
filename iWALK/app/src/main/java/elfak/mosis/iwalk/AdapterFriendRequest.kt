@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -40,8 +41,11 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
 
     override fun onBindViewHolder(friendRequestHolder: MyFriendRequestHolder, position: Int) {
         friendRequestHolder.friendUsername.setText(friendRequestsList[position].getFriendUsername())
-        Picasso.get().load(friendRequestsList[position].getFriendImage())
-            .into(friendRequestHolder.friendImage)
+        if (URLUtil.isValidUrl(friendRequestsList[position].getFriendImage())) {
+            Picasso.get().load(friendRequestsList[position].getFriendImage())
+                .into(friendRequestHolder.friendImage)
+        }
+
         requestUserId = friendRequestsList[position].getFriendSenderId()!!
         baseAuth = FirebaseAuth.getInstance()
         val usersRef: CollectionReference = db.collection("users")

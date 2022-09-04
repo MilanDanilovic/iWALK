@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -30,8 +31,10 @@ class AdapterFavouriteWalkers(var ctx: Context, favouriteWalkersList: MutableLis
 
     override fun onBindViewHolder(favouriteWalkersHolder: FavouriteWalkersHolder, position: Int) {
         favouriteWalkersHolder.username.setText(favouriteWalkersList[position].getWalkerUsername())
-        Picasso.get().load(favouriteWalkersList[position].getWalkerImage())
-            .into(favouriteWalkersHolder.image)
+        if (URLUtil.isValidUrl(favouriteWalkersList[position].getWalkerImage())) {
+            Picasso.get().load(favouriteWalkersList[position].getWalkerImage())
+                .into(favouriteWalkersHolder.image)
+        }
 
         baseAuth = FirebaseAuth.getInstance()
 

@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -38,10 +39,14 @@ class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) 
         inProgressMyWalksHolder.postDescription.setText(walksList[position].getPostDescription())
         inProgressMyWalksHolder.postDate.setText(walksList[position].getPostDate())
         inProgressMyWalksHolder.postTime.setText(walksList[position].getPostTime())
-        Picasso.get().load(walksList[position].getPostDogImage1())
-            .into(inProgressMyWalksHolder.postDogImage1)
-        Picasso.get().load(walksList[position].getPostDogImage2())
-            .into(inProgressMyWalksHolder.postDogImage2)
+        if (URLUtil.isValidUrl(walksList[position].getPostDogImage1())) {
+            Picasso.get().load(walksList[position].getPostDogImage1())
+                .into(inProgressMyWalksHolder.postDogImage1)
+        }
+        if (URLUtil.isValidUrl(walksList[position].getPostDogImage2())) {
+            Picasso.get().load(walksList[position].getPostDogImage2())
+                .into(inProgressMyWalksHolder.postDogImage2)
+        }
 
         inProgressMyWalksHolder.cancel.setOnClickListener(View.OnClickListener { v ->
             val alertDialog = AlertDialog.Builder(ctx, R.style.Theme_PopUpDialog)

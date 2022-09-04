@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,10 +41,14 @@ class AdapterNotifications(var ctx: Context, notificationsList: MutableList<Noti
         notificationHolder.description.setText(notificationsList[position].getDescription())
         notificationHolder.date.setText(notificationsList[position].getDate())
         notificationHolder.time.setText(notificationsList[position].getTime())
-        Picasso.get().load(notificationsList[position].getDogImage1())
-            .into(notificationHolder.dogPic1)
-        Picasso.get().load(notificationsList[position].getDogImage2())
-            .into(notificationHolder.dogPic2)
+        if (URLUtil.isValidUrl(notificationsList[position].getDogImage1())) {
+            Picasso.get().load(notificationsList[position].getDogImage1())
+                .into(notificationHolder.dogPic1)
+        }
+        if (URLUtil.isValidUrl(notificationsList[position].getDogImage2())) {
+            Picasso.get().load(notificationsList[position].getDogImage2())
+                .into(notificationHolder.dogPic2)
+        }
 
         baseAuth = FirebaseAuth.getInstance()
 

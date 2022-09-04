@@ -119,13 +119,12 @@ class MessageForWalkerFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to cancel message?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-
-                /*val fragment: Fragment = HomeFragment()
+                val fragment: Fragment = HomeFragment()
                 val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
                 val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.message_for_walker_fragment, fragment)
                 fragmentTransaction.addToBackStack(null)
-                fragmentTransaction.commit()*/
+                fragmentTransaction.commit()
             })
             alertDialog.setNegativeButton("No", DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() })
             alertDialog.show()
@@ -141,8 +140,6 @@ class MessageForWalkerFragment : Fragment() {
 
                 val dataToSave: MutableMap<String, Any> =
                     HashMap()
-
-                val dateForSaving : String
 
                 if(!TextUtils.isEmpty(descriptionMessage.text.toString())) {
                     dataToSave["description"] = descriptionMessage.text.toString()

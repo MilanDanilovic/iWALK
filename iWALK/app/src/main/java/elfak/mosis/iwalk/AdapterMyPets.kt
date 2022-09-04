@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -32,8 +33,11 @@ class AdapterMyPets(var ctx: Context, petsList: MutableList<Pet>) :
         myPetHolder.petBreed.setText(petsList[position].getPetBreed())
         myPetHolder.petWeight.setText(petsList[position].getPetWeight())
         myPetHolder.petDescription.setText(petsList[position].getPetDescription())
-        Picasso.get().load(petsList[position].getPetImage())
-            .into(myPetHolder.petImage)
+        if (URLUtil.isValidUrl(petsList[position].getPetImage())) {
+            Picasso.get().load(petsList[position].getPetImage())
+                .into(myPetHolder.petImage)
+        }
+
         baseAuth = FirebaseAuth.getInstance()
         myPetHolder.constraintLayoutMyPets.setOnClickListener(View.OnClickListener { v ->
             val activity= v!!.context as AppCompatActivity
