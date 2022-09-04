@@ -23,7 +23,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -180,14 +179,14 @@ class MessageForWalkerFragment : Fragment() {
                     fragmentTransaction.commit()
                     Toast.makeText(
                         context,
-                        "messages is saved in database!",
+                        "Message sent!",
                         Toast.LENGTH_LONG
                     )
                         .show()
                 }.addOnFailureListener { e ->
                     Toast.makeText(
                         context,
-                        "messages is not saved! Try again! ",
+                        "Messages is not sent! Try again! ",
                         Toast.LENGTH_LONG
                     ).show()
                     Log.w("TAG", "messages is not saved in database! ", e)

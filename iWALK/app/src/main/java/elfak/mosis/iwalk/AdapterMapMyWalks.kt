@@ -70,13 +70,13 @@ class AdapterMapMyWalks(var ctx: Context, walksList: MutableList<Walks>) :
 
                         Toast.makeText(
                             ctx,
-                            "Data successfully updated.",
+                            "Walk canceled!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             ctx,
-                            "Error updating data.",
+                            "Error canceling walk!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

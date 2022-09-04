@@ -140,14 +140,14 @@ class AdapterInProgressWalks(var ctx: Context, walksList: MutableList<Walks>) :
 
                     Toast.makeText(
                         ctx,
-                        "Data successfully updated.",
+                        "Walk finished!",
                         Toast.LENGTH_SHORT
                     ).show()
 
                 } else {
                     Toast.makeText(
                         ctx,
-                        "Error updating data.",
+                        "Error finishing walk!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

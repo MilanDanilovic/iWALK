@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -72,7 +71,7 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                                 .addOnFailureListener { e ->
                                     Log.w(
                                         "TAG",
-                                        "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA",
+                                        "Error deleting document",
                                         e
                                     )
                                 }
@@ -82,12 +81,12 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                         } else {
                             Toast.makeText(
                                 v.context,
-                                "Error deleting post!",
+                                "Error deleting friend request!",
                                 Toast.LENGTH_LONG
                             ).show()
                             Log.w(
                                 "TAG",
-                                "Error deleting documentAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                "Error deleting document"
                             )
                         }
                     }
@@ -116,11 +115,10 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                                     "friends", friends
                                 )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
                                     if (task.isSuccessful) {
-                                        Toast.makeText(
-                                            v.context,
-                                            "Data successfully updated.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Log.d(
+                                            "TAG",
+                                            "Data successfully updated."
+                                        )
                                     } else {
                                         Toast.makeText(
                                             v.context,
@@ -171,7 +169,6 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                                                             }
                                                         friendRequestsList.remove(friendRequestsList.get(friendRequestHolder.getAdapterPosition()))
                                                         friendRequestHolder.layout.removeAllViews()
-                                                        Toast.makeText(v.context, "Friend request is deleted!", Toast.LENGTH_LONG).show()
                                                     } else {
                                                         Toast.makeText(
                                                             v.context,
@@ -187,13 +184,13 @@ class AdapterFriendRequest (var ctx: Context, friendRequestsList: MutableList<Fr
                                         }
                                         Toast.makeText(
                                             v.context,
-                                            "Data successfully updated.",
+                                            "Friend request accepted!",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     } else {
                                         Toast.makeText(
                                             v.context,
-                                            "Error updating data.",
+                                            "Error deleting friend request!",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }

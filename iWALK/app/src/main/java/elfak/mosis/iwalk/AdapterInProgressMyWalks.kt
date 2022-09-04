@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
@@ -76,13 +74,13 @@ class AdapterInProgressMyWalks(var ctx: Context, walksList: MutableList<Walks>) 
 
                         Toast.makeText(
                             ctx,
-                            "Data successfully updated.",
+                            "Walk canceled!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             ctx,
-                            "Error updating data.",
+                            "Error canceling walk!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

@@ -114,13 +114,13 @@ class AdapterFriendAll (var ctx: Context, allFriendsList: MutableList<Friend>) :
 
                                                                                                     Toast.makeText(
                                                                                                         v.context,
-                                                                                                        "Data successfully updated.",
+                                                                                                        "Friend deleted!",
                                                                                                         Toast.LENGTH_SHORT
                                                                                                     ).show()
                                                                                                 } else {
                                                                                                     Toast.makeText(
                                                                                                         v.context,
-                                                                                                        "Error updating data.",
+                                                                                                        "Error deleting friend!",
                                                                                                         Toast.LENGTH_SHORT
                                                                                                     ).show()
                                                                                                 }
@@ -134,17 +134,8 @@ class AdapterFriendAll (var ctx: Context, allFriendsList: MutableList<Friend>) :
                                                                         Log.d("TAG", "Error getting documents: ", task.exception)
                                                                     }
                                                                 }
-                                                            Toast.makeText(
-                                                                v.context,
-                                                                "Data successfully updated.",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
                                                         } else {
-                                                            Toast.makeText(
-                                                                v.context,
-                                                                "Error updating data.",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
+                                                            Log.d("TAG", "Error updating data ", task.exception)
                                                         }
                                                     }).addOnFailureListener(OnFailureListener { })
                                             }

@@ -66,13 +66,13 @@ class AdapterNewPosts(var ctx: Context, postsList: MutableList<Post>) :
                         fragmentTransaction.commit()
                         Toast.makeText(
                             ctx,
-                            "Data successfully updated.",
+                            "Post accepted!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             ctx,
-                            "Error updating data.",
+                            "Error accepting post!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

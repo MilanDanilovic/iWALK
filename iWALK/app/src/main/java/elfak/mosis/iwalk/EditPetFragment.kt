@@ -115,13 +115,13 @@ class EditPetFragment : Fragment() {
                     if (task.isSuccessful) {
                         Toast.makeText(
                             context,
-                            "Data successfully updated.",
+                            "Pet edited!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             context,
-                            "Error updating data.",
+                            "Error editing pet!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
