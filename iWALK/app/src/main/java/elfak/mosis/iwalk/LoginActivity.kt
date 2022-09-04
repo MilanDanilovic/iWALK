@@ -1,7 +1,9 @@
 package elfak.mosis.iwalk
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -9,8 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -22,6 +26,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import elfak.mosis.iwalk.services.helpers.ServiceHelper
 
 class LoginActivity : AppCompatActivity() {
 
@@ -31,6 +36,16 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password : TextInputEditText
     private lateinit var forgottenPassword : TextView
     private val docRef = FirebaseFirestore.getInstance()
+    private val permissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        var areGranted = true
+        for(permission in permissions)
+            areGranted = areGranted && permission.value
+
+        if(areGranted){
+            ServiceHelper.startLocationService(this, this@LoginActivity)
+        }
+        startActivity(Intent(applicationContext, HomeActivity::class.java))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,8 +82,7 @@ class LoginActivity : AppCompatActivity() {
                                     "Succesful login!",
                                     Toast.LENGTH_SHORT
                                 ).show()
-
-                                startActivity(Intent(applicationContext, HomeActivity::class.java))
+                                startBackgroundService()
                             } else{
 
                                 auth.currentUser!!.sendEmailVerification()
@@ -127,13 +141,28 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkPermission(): Boolean {
+        val resultFineLocation = ContextCompat.checkSelfPermission(this.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION)
+        val resultCoarseLocation = ContextCompat.checkSelfPermission(this.applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION)
+        return resultFineLocation == PackageManager.PERMISSION_GRANTED && resultCoarseLocation == PackageManager.PERMISSION_GRANTED
+    }
+    private fun startBackgroundService() {
+        if(!checkPermission()) {
+            permissions.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION))
+        } else {
+            ServiceHelper.startLocationService(this, this@LoginActivity)
+            startActivity(Intent(applicationContext, HomeActivity::class.java))
+        }
+    }
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if(currentUser != null){
             if(currentUser.isEmailVerified && !currentUser.isAnonymous) {
-                startActivity(Intent(applicationContext, HomeActivity::class.java))
+                startBackgroundService()
             } else{
                 Toast.makeText(
                     this@LoginActivity,

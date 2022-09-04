@@ -1,10 +1,13 @@
 package elfak.mosis.iwalk
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -24,6 +27,8 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import elfak.mosis.iwalk.map.MapFragment
+import elfak.mosis.iwalk.services.helpers.ServiceHelper
+import elfak.mosis.iwalk.services.helpers.ServicePreference
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -140,10 +145,51 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, PostsFragment()).commit()
             R.id.nav_walks -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, WalksFragment()).commit()
+            R.id.nav_service ->{
+                val activity = this
+                AlertDialog.Builder(ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog))
+                    .setTitle("Background service")
+                    .setMessage("Background service updates your location and notifies you when someone is nearby.")
+                    .setCancelable(false)
+                    .setPositiveButton("Enable", DialogInterface.OnClickListener { dialogInterface, i ->
+                        //Service On
+                        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+                        val serviceEnabled = sharedPref.getInt("serviceEnabled", ServicePreference.NOT_SET.setting)
+                        if(serviceEnabled != ServicePreference.ENABLED.setting) {
+                            with(sharedPref.edit()) {
+                                putInt("serviceEnabled", ServicePreference.ENABLED.setting)
+                                apply()
+                            }
+                        }
+                        ServiceHelper.startLocationService(activity, activity)
+                    })
+                    .setNegativeButton("Disable", DialogInterface.OnClickListener { _, _ ->
+                        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+                        val serviceEnabled = sharedPref.getInt("serviceEnabled", ServicePreference.NOT_SET.setting)
+                        if(serviceEnabled != ServicePreference.DISABLED.setting) {
+                            with(sharedPref.edit()) {
+                                putInt("serviceEnabled", ServicePreference.DISABLED.setting)
+                                apply()
+                            }
+                        }
+                        ServiceHelper.stopLocationService(activity)
+                    })
+                    .show()
+            }
             R.id.nav_logout -> {
-                Firebase.auth.signOut()
-                val i: Intent = Intent(this, MainActivity::class.java)
-                startActivity(i)
+                AlertDialog.Builder(ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog))
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to logout?")
+                    .setPositiveButton("Yes", DialogInterface.OnClickListener { dialogInterface, i ->
+                        ServiceHelper.stopLocationService(this)
+                        Firebase.auth.signOut()
+                        val intent: Intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    })
+                    .setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ ->
+
+                    })
+                    .show()
             }
         }
         drawer.closeDrawer(GravityCompat.START)
