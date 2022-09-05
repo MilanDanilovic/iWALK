@@ -483,6 +483,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             builder.setPositiveButton("OK") { _, _ ->
                 acceptUserPost(postMarker)
                 Toast.makeText(requireContext(), "Accepted", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
             }
 
             dialog = builder.create()
@@ -788,6 +789,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                             )
                                         }
                                     }
+                            } else {
+                                //click on other users marker
+                                displayAcceptDialogForOtherUsersMarker(markerToDelete)
                             }
                         }
                     } else {
@@ -795,6 +799,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
         }
+    }
+
+    fun displayAcceptDialogForOtherUsersMarker(postMarker:Marker){
+        lateinit var dialog: AlertDialog
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Accept post: " + postMarker.title)
+        builder.setMessage("Message: " + postMarker.snippet)
+        builder.setNegativeButton("No") { _, _ ->
+            dialog.dismiss()
+            Toast.makeText(requireContext(), "Declined", Toast.LENGTH_SHORT).show()
+        }
+        builder.setPositiveButton("OK") { _, _ ->
+            acceptUserPost(postMarker)
+            dialog.dismiss()
+            Toast.makeText(requireContext(), "Accepted", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog = builder.create()
+        dialog.show()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
