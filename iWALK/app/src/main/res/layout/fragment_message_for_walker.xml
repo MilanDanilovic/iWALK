@@ -40,7 +40,7 @@
                 android:backgroundTint="#FFFFFF"
                 android:hint="enter description..."
                 android:ems="10"
-                android:maxLines="10"
+                android:maxLines="5"
                 android:minLines="1"
                 android:scrollbars="vertical"
                 android:textColor="#FFFFFF"
