@@ -58,6 +58,7 @@ class EditPetFragment : Fragment() {
             petId = bundle.getString("pet_id")
             Picasso.get().load(bundle.getString("pet_image"))
                 .into(image)
+            imageUrl = bundle.getString("pet_image")!!
         }
 
         image.setOnClickListener{
