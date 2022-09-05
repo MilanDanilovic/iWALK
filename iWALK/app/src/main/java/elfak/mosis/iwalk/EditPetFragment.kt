@@ -91,12 +91,6 @@ class EditPetFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to save changes?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                val fragment: Fragment = MyPetsFragment()
-                val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-                val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.edit_pet_fragment, fragment)
-                fragmentTransaction.addToBackStack(null)
-                fragmentTransaction.commit()
 
                 val newName = name.text.toString()
                 val newBreed = breed.text.toString()
@@ -113,6 +107,12 @@ class EditPetFragment : Fragment() {
                     "petImageUrl", newImage
                 )?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
                     if (task.isSuccessful) {
+                        val fragment: Fragment = MyPetsFragment()
+                        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+                        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.replace(R.id.edit_pet_fragment, fragment)
+                        fragmentTransaction.addToBackStack(null)
+                        fragmentTransaction.commit()
                         Toast.makeText(
                             context,
                             "Pet edited!",

@@ -18,8 +18,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/users_pet_picture"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_littledog"
             app:layout_constraintHorizontal_bias="0.02"
@@ -31,6 +32,7 @@
             android:id="@+id/linear1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.082"
             app:layout_constraintStart_toEndOf="@+id/users_pet_picture"
@@ -43,7 +45,7 @@
                 android:layout_gravity="start"
                 android:text="Name:"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -53,7 +55,7 @@
                 android:layout_marginStart="5dp"
                 android:text="name"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -63,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.082"
             app:layout_constraintStart_toEndOf="@+id/users_pet_picture"
@@ -75,7 +78,7 @@
                 android:layout_gravity="start"
                 android:text="Breed:"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -85,7 +88,7 @@
                 android:layout_marginStart="5dp"
                 android:text="dog"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -95,6 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.082"
             app:layout_constraintStart_toEndOf="@+id/users_pet_picture"
@@ -107,7 +111,7 @@
                 android:layout_gravity="start"
                 android:text="Weight:"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -117,7 +121,7 @@
                 android:layout_marginStart="5dp"
                 android:text="10kg"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
@@ -126,6 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.082"
             app:layout_constraintStart_toEndOf="@+id/users_pet_picture"
@@ -136,20 +141,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="16dp"
                 android:text="Description:"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/users_pet_description_value"
-                android:layout_width="wrap_content"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="..."
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>

@@ -113,12 +113,6 @@ class EditProfileFragment : Fragment() {
             alertDialog.setMessage("Are you sure you want to save changes?")
 
             alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-                val fragment: Fragment = ProfileFragment()
-                val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-                val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.edit_profile_fragment, fragment)
-                fragmentTransaction.addToBackStack(null)
-                fragmentTransaction.commit()
 
                 val userName = newUsername.text.toString()
                 val usersRef = docRef.collection("users")
@@ -168,6 +162,13 @@ class EditProfileFragment : Fragment() {
                             documentReference.update(dataToSave)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
+                                        val fragment: Fragment = ProfileFragment()
+                                        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+                                        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+                                        fragmentTransaction.replace(R.id.edit_profile_fragment, fragment)
+                                        fragmentTransaction.addToBackStack(null)
+                                        fragmentTransaction.commit()
+
                                         Toast.makeText(
                                             this@EditProfileFragment.context,
                                             "Profile is successfully updated.",
